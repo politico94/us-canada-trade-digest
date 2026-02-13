@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US-Canada Trade Policy Digest — {{ date }}</title>
+    <style>
+        :root {
+            --blue: #002868;
+            --accent: #C8102E;
+            --bg: #FAFAF8;
+            --text: #1a1a1a;
+            --muted: #666;
+            --border: #e0e0e0;
+            --card-bg: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        .header {
+            border-bottom: 4px double var(--accent);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--blue);
+        }
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-top: 0.3rem;
+        }
+        .joke {
+            background: #FFF8F0;
+            border-left: 3px solid var(--accent);
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.6rem;
+        }
+        .item-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+        .item-title a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+        .item-title a:hover { text-decoration: underline; }
+        .item-meta {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 0.3rem;
+            font-family: -apple-system, sans-serif;
+        }
+        .item-snippet {
+            font-size: 0.88rem;
+            color: #444;
+            line-height: 1.5;
+        }
+        .item-keywords {
+            margin-top: 0.4rem;
+            font-size: 0.75rem;
+        }
+        .keyword-tag {
+            display: inline-block;
+            background: #EEF0F4;
+            color: var(--blue);
+            padding: 0.1rem 0.45rem;
+            border-radius: 3px;
+            margin-right: 0.25rem;
+            margin-top: 0.15rem;
+            font-family: -apple-system, sans-serif;
+        }
+        .score-bar {
+            display: inline-block;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        .empty-section {
+            color: var(--muted);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .footer {
+            border-top: 4px double var(--accent);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-family: -apple-system, sans-serif;
+        }
+        .footer a { color: var(--blue); }
+        .disclaimer {
+            background: #FFF3F3;
+            border: 1px solid #FFCCCC;
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .header h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🇺🇸🇨🇦 US-Canada Trade Policy Digest</h1>
+    <div class="subtitle">{{ date }} · {{ total_items }} items from {{ total_sources }} sources</div>
+</div>
+
+<div class="joke">
+    🍁 <strong>Today's Trade Quip:</strong> {{ joke }}
+</div>
+
+{% for section_key, items in sections.items() %}
+<div class="section">
+    <div class="section-title">{{ section_labels.get(section_key, section_key) }}</div>
+
+    {% for item in items %}
+    <div class="item">
+        <div class="item-title">
+            <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+            <span class="score-bar" style="width: {{ (item.relevance_score * 4)|int }}px;" title="Relevance: {{ item.relevance_score }}"></span>
+        </div>
+        <div class="item-meta">
+            {{ item.source_name }}
+            {% if item.published %} · {{ item.published.strftime('%b %d') if item.published.strftime is defined else item.published }}{% endif %}
+        </div>
+        {% if item.snippet and item.snippet != item.title %}
+        <div class="item-snippet">{{ item.snippet[:200] }}{% if item.snippet|length > 200 %}…{% endif %}</div>
+        {% endif %}
+        {% if item.keywords_matched %}
+        <div class="item-keywords">
+            {% for kw in item.keywords_matched[:4] %}
+            <span class="keyword-tag">{{ kw }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+{% if not sections %}
+<div class="empty-section">
+    No items matched the trade policy filter today. Either it's quiet or the sources need tuning.
+</div>
+{% endif %}
+
+<div class="footer">
+    <div class="disclaimer">
+        <strong>⚠️ This is not journalism.</strong> Automated keyword filtering across public sources.
+        All items link to primary sources. Verify before acting.
+    </div>
+    <p>
+        Generated {{ generated_at }} ·
+        No AI was used — just fetch, filter, and publish ·
+        <a href="archive/">Browse archive</a>
+    </p>
+</div>
+
+</body>
+</html>
