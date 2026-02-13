@@ -1,0 +1,303 @@
+{
+  "date": "2026-02-13",
+  "sections": {
+    "trade_actions": [
+      {
+        "title": "Insure your exports",
+        "url": "https://www.edc.ca/en/premium/ebook/grow-exports-with-credit-insurance/grow-exports-with-credit-insurance.html?refPremiumURL=/en/premium/ebook/grow-exports-with-credit-insurance/grow-exports-with-credit-insurance.html",
+        "source_name": "Export Development Canada",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Insure your exports",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "export"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "b2e840d285485e7a5be4b42bcd1e2a5a"
+      },
+      {
+        "title": "Export Guarantee Program",
+        "url": "https://www.edc.ca/en/solutions/working-capital-guarantees/export-guarantee-program.html",
+        "source_name": "Export Development Canada",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Export Guarantee Program",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "export"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "7919bd4b61ac196d81f1f52df13d8017"
+      },
+      {
+        "title": "Start exporting",
+        "url": "https://www.edc.ca/en/get-export-ready.html",
+        "source_name": "Export Development Canada",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Start exporting",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "export"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "4072e4b44e78e07887c0dd07df81fa00"
+      },
+      {
+        "title": "Grow your export business",
+        "url": "https://www.edc.ca/en/navigate-global-trade.html",
+        "source_name": "Export Development Canada",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Grow your export business",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "export"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "8d03a4c2e17748e696b48602ab309d55"
+      },
+      {
+        "title": "Strategic pricing for exporters",
+        "url": "https://www.edc.ca/en/events/webinar/strategic-global-pricing-exporters.html",
+        "source_name": "Export Development Canada",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Strategic pricing for exporters",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "export"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "301f88abe97c814f8afe9f0dfe4d8525"
+      }
+    ],
+    "legislation": [
+      {
+        "title": "The U.S.-Mexico-Canada Agreement: Evaluating North American Competitiveness",
+        "url": "https://www.finance.senate.gov/hearings/the-us-mexico-canada-agreement-evaluating-north-american-competitiveness",
+        "source_name": "Senate Finance Committee",
+        "source_category": "congressional",
+        "published": null,
+        "snippet": "The U.S.-Mexico-Canada Agreement: Evaluating North American Competitiveness",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "c84e61335e66ed61a4340de6b0a0ae90"
+      },
+      {
+        "title": "Trade Subcommittee Hearing on Maintaining American Innovation and Technology Leadership",
+        "url": "https://waysandmeans.house.gov/event/trade-subcommittee-hearing-on-maintaining-american-innovation-and-technology-leadership/",
+        "source_name": "House Ways and Means Committee",
+        "source_category": "congressional",
+        "published": null,
+        "snippet": "Trade Subcommittee Hearing on Maintaining American Innovation and Technology Leadership",
+        "relevance_score": 1.5,
+        "keywords_matched": [
+          "trade"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "0ea70bb999972d5356183df10267d8ae"
+      },
+      {
+        "title": "Parliament of Canada",
+        "url": "https://www.parl.ca",
+        "source_name": "House of Commons - Hansard",
+        "source_category": "parliamentary",
+        "published": null,
+        "snippet": "Parliament of Canada",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "62cbc70c849984bccf1eb3de9ebacb4e"
+      },
+      {
+        "title": "Opens in a new windowParliament of Canada",
+        "url": "https://parl.ca",
+        "source_name": "Senate of Canada - Debates",
+        "source_category": "parliamentary",
+        "published": null,
+        "snippet": "Opens in a new windowParliament of Canada",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "04dc0029fa5f5d9b693af717919c56b0"
+      },
+      {
+        "title": "Go to Senators",
+        "url": "https://sencanada.ca/en/senators/",
+        "source_name": "Senate of Canada - Debates",
+        "source_category": "parliamentary",
+        "published": null,
+        "snippet": "Go to Senators",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "NATO"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "1d6e23c0d6f188f4b7ebbf40caa8ea83"
+      }
+    ],
+    "industry_impact": [
+      {
+        "title": "Export and Trade",
+        "url": "https://cme-mec.ca/initiatives/exports-trade/",
+        "source_name": "Canadian Manufacturers & Exporters",
+        "source_category": "industry",
+        "published": null,
+        "snippet": "Export and Trade",
+        "relevance_score": 4.0,
+        "keywords_matched": [
+          "export",
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "e24b32c15c2b2f166372053f62bb9806"
+      },
+      {
+        "title": "Trade & Tariffs Information Hub",
+        "url": "https://cme-mec.ca/manufacturer-information-hub-trade-tariffs/",
+        "source_name": "Canadian Manufacturers & Exporters",
+        "source_category": "industry",
+        "published": null,
+        "snippet": "Trade & Tariffs Information Hub",
+        "relevance_score": 4.0,
+        "keywords_matched": [
+          "tariff",
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "53969dd7351d63b9b28324fc1af7b5a8"
+      },
+      {
+        "title": "Stellantis to add third production shift at Windsor plantMove creating 1,700 jobs was delayed by tariffsEric Atkins4 min read",
+        "url": "https://www.theglobeandmail.com/business/",
+        "source_name": "Globe and Mail - Business",
+        "source_category": "media",
+        "published": null,
+        "snippet": "Stellantis to add third production shift at Windsor plantMove creating 1,700 jobs was delayed by tariffsEric Atkins4 min read",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "tariff"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "eb905e2860bcdb003036415e6b085907"
+      },
+      {
+        "title": "Alberta imports of U.S. alcohol are back, but who\u2019s drinking it?In Ontario, beer, wine and alcohol from south of the border have tanked 95 per cent due to the trade warJason Kirby2 min read",
+        "url": "https://www.theglobeandmail.com/business/",
+        "source_name": "Globe and Mail - Business",
+        "source_category": "media",
+        "published": null,
+        "snippet": "Alberta imports of U.S. alcohol are back, but who\u2019s drinking it?In Ontario, beer, wine and alcohol from south of the border have tanked 95 per cent due to the trade warJason Kirby2 min read",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "import",
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "efe98ea3dafd42fd51e72fbcd30e216e"
+      },
+      {
+        "title": "Traders Price 50% Odds of Third Fed Rate Cut as Inflation Ebbs",
+        "url": "https://financialpost.com/pmn/business-pmn/traders-price-50-odds-of-third-fed-rate-cut-as-inflation-ebbs",
+        "source_name": "Financial Post",
+        "source_category": "media",
+        "published": "2026-02-13 14:21:52+00:00",
+        "snippet": "US Treasuries jumped and investors priced in higher expectations that the Federal Reserve will lower interest rates three times in 2026 after a reading of US inflation came in below forecasts.",
+        "relevance_score": 1.5,
+        "keywords_matched": [
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "1de543d0590f029cf07da24442f28ff2"
+      }
+    ],
+    "analysis": [
+      {
+        "title": "Featured ExpertsChristopher SandsTrump Tariff Threats: To What End?Xavier DelgadoMake Defense Spending About CanadiansDanielle GoldfarbCanada Institute Experts React to the US ElectionRichard SandersT",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Featured ExpertsChristopher SandsTrump Tariff Threats: To What End?Xavier DelgadoMake Defense Spending About CanadiansDanielle GoldfarbCanada Institute Experts React to the US ElectionRichard SandersT",
+        "relevance_score": 4.5,
+        "keywords_matched": [
+          "canada",
+          "canadian",
+          "tariff"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "ff0db267d29f55c1acbe45891248218e"
+      },
+      {
+        "title": "Democratic TransitionMark Carney to Lead Canada Amid Rising Trade Tensions With USDuration:2:13Posted date/time:March 11, 2025",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Democratic TransitionMark Carney to Lead Canada Amid Rising Trade Tensions With USDuration:2:13Posted date/time:March 11, 2025",
+        "relevance_score": 3.5,
+        "keywords_matched": [
+          "canada",
+          "Carney",
+          "trade"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "a9b6d6b79c64cc92f96c40f17efed552"
+      },
+      {
+        "title": "Recent Insights & AnalysisLearn MoreLearn MoreDemocracyCanada's 2025 Election: A Referendum on US-Canadian RelationsPosted date/time:March 25, 2025ByChristopher SandsDemocracyMark Carney's First Week:",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Recent Insights & AnalysisLearn MoreLearn MoreDemocracyCanada's 2025 Election: A Referendum on US-Canadian RelationsPosted date/time:March 25, 2025ByChristopher SandsDemocracyMark Carney's First Week:",
+        "relevance_score": 3.0,
+        "keywords_matched": [
+          "canada",
+          "canadian",
+          "Carney"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "ba4ed1c475db7e09160b4609c9286a62"
+      },
+      {
+        "title": "A stress test of Western character and resilience: Tony Abbott and Kevin Vuong for Inside Policy Talks",
+        "url": "https://macdonaldlaurier.ca/a-stress-test-of-western-character-and-resilience-tony-abbott-and-kevin-vuong-for-inside-policy-talks/",
+        "source_name": "Macdonald-Laurier Institute",
+        "source_category": "think_tanks",
+        "published": "2026-02-13 01:16:08+00:00",
+        "snippet": "A series of global shocks is testing the character and resilience of the West. In recent weeks, debate has intensified over whether the rules-based international order is fraying. Tariff threats, [\u2026]\nThe post A stress test of Western character and resilience: Tony Abbott and Kevin Vuong for Inside Policy Talks appeared first on Macdonald-Laurier Institute.",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "tariff"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "5727aa0f3017fa4050030a253c453ba4"
+      },
+      {
+        "title": "How to Fix Math Education in Canada",
+        "url": "https://cdhowe.org/publication/how-to-fix-math-education-in-canada/",
+        "source_name": "C.D. Howe Institute",
+        "source_category": "think_tanks",
+        "published": "2026-02-13 11:00:59+00:00",
+        "snippet": "To: Education observers From: Anna StokkeRe: How to Fix Math Education in Canada \u00a0 Strong math skills are essential for careers that drive the Canadian economy, and early success in math has been shown to predict later academic success and financial earnings. Yet for more than a decade Canadian math scores in both the Program [\u2026]\nThe post How to Fix Math Education in Canada appeared first on C.D. Howe Institute.",
+        "relevance_score": 2.0,
+        "keywords_matched": [
+          "canada",
+          "canadian"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "e6879eed679ed82909ffd27447aa68da"
+      }
+    ]
+  }
+}
