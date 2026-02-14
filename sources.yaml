@@ -1,200 +1,114 @@
-# ============================================================================
-# US-CANADA TRADE POLICY DAILY DIGEST v2 — SOURCE CONFIGURATION
-# ============================================================================
-# v2 additions:
-#   - Newsletters & Substacks (Morning Trade, Paul Wells, Capitolism, etc.)
-#   - Podcasts (Trade Talks, Canusa Street, Herle Burly, etc.)
-#   - Commentary sources (columnists, think tank blogs)
-#   - Expanded media coverage
-# ============================================================================
+# US-Canada Trade Policy Digest — Source Registry v3
+# 68 sources across 12 categories
+# Each source: name, url, type (rss|web_scrape), keywords, priority
 
-# --- PANETTA SEARCH #1 EQUIVALENT: "canada site:.gov" ---
 us_government:
   - name: "USTR Press Releases"
     url: "https://ustr.gov/about-us/policy-offices/press-office/press-releases"
-    type: rss
-    rss_url: "https://ustr.gov/about-us/policy-offices/press-office/press-releases/rss"
-    keywords: ["canada", "canadian", "CUSMA", "USMCA", "softwood", "dairy", "lumber", "tariff"]
+    type: web_scrape
+    keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america"]
     priority: high
 
-  - name: "Commerce Department - Bureau of Industry and Security"
-    url: "https://www.bis.gov/"
-    type: rss
-    rss_url: "https://www.bis.gov/rss.xml"
-    keywords: ["canada", "canadian", "north america", "USMCA"]
+  - name: "Commerce Department - Trade"
+    url: "https://www.commerce.gov/news"
+    type: web_scrape
+    keywords: ["canada", "trade", "tariff", "import", "duty"]
     priority: high
 
-  - name: "ITC (International Trade Commission)"
-    url: "https://www.usitc.gov/"
-    type: rss
-    rss_url: "https://usitc.gov/rss_feed"
-    keywords: ["canada", "canadian", "USMCA", "CUSMA"]
+  - name: "ITC - Trade Remedy"
+    url: "https://www.usitc.gov/press_room/news_release.htm"
+    type: web_scrape
+    keywords: ["canada", "lumber", "softwood", "dairy", "countervailing"]
     priority: high
 
-  - name: "CBP (Customs and Border Protection)"
-    url: "https://www.cbp.gov/"
-    type: rss
-    rss_url: "https://www.cbp.gov/rss/feeds"
-    keywords: ["canada", "canadian", "northern border"]
+  - name: "CBP Trade"
+    url: "https://www.cbp.gov/newsroom"
+    type: web_scrape
+    keywords: ["canada", "trade", "import", "duty", "tariff"]
     priority: medium
 
-  - name: "State Department - Western Hemisphere Affairs"
-    url: "https://www.state.gov/bureaus-offices/under-secretary-for-political-affairs/bureau-of-western-hemisphere-affairs/"
-    type: web_scrape
-    keywords: ["canada", "canadian", "Ottawa", "bilateral"]
-    priority: high
-
-  - name: "White House Briefing Room"
-    url: "https://www.whitehouse.gov/briefing-room/"
+  - name: "Federal Register - Trade"
+    url: "https://www.federalregister.gov/api/v1/documents.rss?conditions%5Btopics%5D%5B%5D=trade"
     type: rss
-    rss_url: "https://www.whitehouse.gov/briefing-room/feed/"
-    keywords: ["canada", "canadian", "tariff", "USMCA", "CUSMA", "trade", "Carney"]
-    priority: high
+    keywords: ["canada", "USMCA"]
+    priority: medium
 
-# --- CANADIAN GOVERNMENT SOURCES ---
 canadian_government:
   - name: "Global Affairs Canada - Trade"
-    url: "https://www.international.gc.ca/trade-commerce/index.aspx"
+    url: "https://www.international.gc.ca/global-affairs-affaires-mondiales/news-nouvelles/index.aspx?lang=eng"
     type: web_scrape
-    keywords: ["united states", "CUSMA", "USMCA", "tariff", "trade", "export"]
+    keywords: ["trade", "united states", "tariff", "CUSMA", "USMCA"]
     priority: high
 
-  - name: "Canada Gazette"
-    url: "https://canadagazette.gc.ca/rp-pr/publications-eng.html"
-    type: web_scrape
-    keywords: ["tariff", "customs", "trade", "import", "export", "duties", "CUSMA"]
-    priority: high
-
-  - name: "Finance Canada - News"
+  - name: "Finance Canada"
     url: "https://www.canada.ca/en/department-finance/news.html"
-    type: rss
-    rss_url: "https://www.canada.ca/en/department-finance/news.xml"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "border"]
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states", "countermeasure"]
     priority: high
 
-  - name: "CBSA (Canada Border Services Agency)"
-    url: "https://www.cbsa-asfc.gc.ca/"
+  - name: "CBSA Trade"
+    url: "https://www.cbsa-asfc.gc.ca/media/release-communique-eng.html"
     type: web_scrape
-    keywords: ["tariff", "duties", "anti-dumping", "countervailing", "trade"]
+    keywords: ["duty", "trade", "tariff", "import", "anti-dumping"]
     priority: medium
 
   - name: "Export Development Canada"
-    url: "https://www.edc.ca/en/weekly-commentary.html"
+    url: "https://www.edc.ca/en/blog.html"
     type: web_scrape
-    keywords: ["united states", "trade", "export", "tariff"]
+    keywords: ["trade", "export", "united states", "tariff"]
     priority: medium
 
-# --- CONGRESSIONAL SOURCES ---
 congressional:
   - name: "Senate Finance Committee"
     url: "https://www.finance.senate.gov/hearings"
     type: web_scrape
-    keywords: ["canada", "USMCA", "CUSMA", "tariff", "trade", "lumber", "dairy", "softwood"]
+    keywords: ["trade", "tariff", "USMCA", "canada"]
     priority: high
 
-  - name: "Senate Foreign Relations Committee"
+  - name: "House Ways & Means"
+    url: "https://waysandmeans.house.gov/legislation/"
+    type: web_scrape
+    keywords: ["trade", "tariff", "USMCA", "canada"]
+    priority: high
+
+  - name: "Senate Foreign Relations"
     url: "https://www.foreign.senate.gov/hearings"
     type: web_scrape
-    keywords: ["canada", "canadian", "north america", "NATO"]
+    keywords: ["canada", "trade", "diplomat", "ambassador"]
     priority: medium
 
-  - name: "House Ways and Means Committee"
-    url: "https://waysandmeans.house.gov/hearings/"
+  - name: "Congressional Research Service (via EveryCRSReport)"
+    url: "https://www.everycrsreport.com/reports.html"
     type: web_scrape
-    keywords: ["canada", "USMCA", "CUSMA", "tariff", "trade"]
-    priority: high
-
-  - name: "House Foreign Affairs Committee"
-    url: "https://foreignaffairs.house.gov/hearings/"
-    type: web_scrape
-    keywords: ["canada", "canadian", "north america"]
+    keywords: ["canada", "USMCA", "CUSMA", "trade"]
     priority: medium
 
-# --- CONGRESSIONAL RECORD ---
-congressional_record:
-  - name: "Congress.gov - Bills mentioning Canada"
-    url: "https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22canada%22%7D"
-    type: web_scrape
-    keywords: ["canada", "USMCA", "CUSMA"]
-    priority: high
-
-  - name: "Congressional Record - Floor speeches"
-    url: "https://www.congress.gov/congressional-record"
-    type: web_scrape
-    keywords: ["canada", "canadian", "USMCA", "CUSMA", "tariff", "softwood", "dairy"]
-    priority: high
-
-# --- FEDERAL REGISTER ---
-federal_register:
-  - name: "Federal Register - Canada-related rules"
-    url: "https://www.federalregister.gov/"
-    type: api
-    api_url: "https://www.federalregister.gov/api/v1/documents.json?conditions[term]=canada+trade&conditions[publication_date][gte]={yesterday}"
-    keywords: ["canada", "canadian", "CUSMA", "USMCA"]
-    priority: high
-
-  - name: "Federal Register - Tariff actions"
-    url: "https://www.federalregister.gov/"
-    type: api
-    api_url: "https://www.federalregister.gov/api/v1/documents.json?conditions[term]=tariff+canada&conditions[publication_date][gte]={yesterday}"
-    keywords: ["tariff", "duty", "canada"]
-    priority: high
-
-# --- CANADIAN PARLIAMENTARY SOURCES ---
 parliamentary:
-  - name: "House of Commons - Hansard"
-    url: "https://www.ourcommons.ca/documentviewer/en/house/latest/hansard"
-    type: web_scrape
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "border", "softwood", "lumber", "dairy"]
-    priority: high
-
-  - name: "Senate of Canada - Debates"
-    url: "https://sencanada.ca/en/in-the-chamber/debates/"
-    type: web_scrape
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA"]
-    priority: medium
-
-  - name: "Standing Committee on International Trade"
+  - name: "House of Commons - Trade Committee"
     url: "https://www.ourcommons.ca/Committees/en/CIIT"
     type: web_scrape
-    keywords: ["united states", "CUSMA", "USMCA", "tariff"]
-    priority: high
-
-  - name: "Standing Committee on Finance"
-    url: "https://www.ourcommons.ca/Committees/en/FINA"
-    type: web_scrape
     keywords: ["trade", "tariff", "united states", "CUSMA"]
-    priority: medium
-
-# --- THINK TANKS & POLICY ANALYSIS ---
-think_tanks:
-  - name: "C.D. Howe Institute"
-    url: "https://www.cdhowe.org/"
-    type: rss
-    rss_url: "https://www.cdhowe.org/rss.xml"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "border"]
     priority: high
 
-  - name: "CSIS (Centre for Strategic and International Studies)"
-    url: "https://www.csis.org/"
-    type: rss
-    rss_url: "https://www.csis.org/rss.xml"
-    keywords: ["canada", "USMCA", "north america", "trade"]
+  - name: "Senate - Banking & Trade Committee"
+    url: "https://sencanada.ca/en/committees/banc"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
 
-  - name: "Peterson Institute for International Economics"
-    url: "https://www.piie.com/"
-    type: rss
-    rss_url: "https://www.piie.com/rss.xml"
-    keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america"]
-    priority: medium
+think_tank:
+  - name: "C.D. Howe Institute"
+    url: "https://www.cdhowe.org/intelligence-memos"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states", "CUSMA", "border"]
+    priority: high
 
-  - name: "Brookings - Canada/Trade"
-    url: "https://www.brookings.edu/"
+  - name: "Macdonald-Laurier Institute"
+    url: "https://macdonaldlaurier.ca"
+    rss_url: "https://macdonaldlaurier.ca/feed/"
     type: rss
-    rss_url: "https://www.brookings.edu/feed/"
-    keywords: ["canada", "USMCA", "trade", "tariff", "north america"]
-    priority: medium
+    keywords: ["trade", "tariff", "united states", "CUSMA"]
+    priority: high
 
   - name: "Canada Institute (Wilson Center)"
     url: "https://www.wilsoncenter.org/program/canada-institute"
@@ -202,99 +116,119 @@ think_tanks:
     keywords: ["trade", "tariff", "CUSMA", "USMCA", "bilateral"]
     priority: high
 
-  - name: "Canadian Global Affairs Institute"
-    url: "https://www.cgai.ca/"
+  - name: "Peterson Institute (PIIE)"
+    url: "https://www.piie.com/research"
     type: web_scrape
-    keywords: ["trade", "tariff", "united states", "bilateral"]
+    keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america"]
+    priority: high
+
+  - name: "CSIS Scholl Chair"
+    url: "https://www.csis.org/programs/scholl-chair-international-business"
+    type: web_scrape
+    keywords: ["canada", "USMCA", "trade", "tariff"]
+    priority: high
+
+  - name: "Brookings Trade"
+    url: "https://www.brookings.edu/topic/trade/"
+    type: web_scrape
+    keywords: ["canada", "USMCA", "CUSMA", "north america"]
     priority: medium
 
-  - name: "Institute for Research on Public Policy (IRPP)"
-    url: "https://irpp.org/"
-    type: rss
-    rss_url: "https://irpp.org/feed/"
-    keywords: ["trade", "tariff", "united states", "CUSMA"]
+  - name: "IISD Trade"
+    url: "https://www.iisd.org/topics/trade-and-investment"
+    type: web_scrape
+    keywords: ["canada", "trade", "tariff", "CUSMA"]
     priority: medium
 
-  - name: "Macdonald-Laurier Institute"
-    url: "https://macdonaldlaurier.ca/"
-    type: rss
-    rss_url: "https://macdonaldlaurier.ca/feed/"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA"]
+  - name: "Fraser Institute"
+    url: "https://www.fraserinstitute.org/categories/trade"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
 
-  - name: "Centre for International Governance Innovation"
-    url: "https://www.cigionline.org/"
-    type: rss
-    rss_url: "https://www.cigionline.org/rss.xml"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "north america"]
+  - name: "Conference Board of Canada"
+    url: "https://www.conferenceboard.ca/focus-areas/canadian-economics/trade"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
 
   - name: "Canada West Foundation"
-    url: "https://cwf.ca/"
+    url: "https://cwf.ca/research/"
     type: web_scrape
-    keywords: ["trade", "tariff", "united states", "export", "energy"]
+    keywords: ["trade", "tariff", "energy", "pipeline"]
     priority: medium
 
-# --- INDUSTRY / LOBBYING ---
-industry:
-  - name: "Canadian Chamber of Commerce"
-    url: "https://chamber.ca/"
+  - name: "Public Policy Forum"
+    url: "https://ppforum.ca/publications/"
     type: web_scrape
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "border"]
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
 
-  - name: "Canadian Manufacturers & Exporters"
-    url: "https://cme-mec.ca/"
+  - name: "IRPP"
+    url: "https://irpp.org/research/"
     type: web_scrape
-    keywords: ["trade", "tariff", "united states", "export"]
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
 
-  - name: "US Chamber of Commerce"
-    url: "https://www.uschamber.com/"
-    type: rss
-    rss_url: "https://www.uschamber.com/feed"
-    keywords: ["canada", "USMCA", "tariff", "north america"]
-    priority: medium
-
-  - name: "Automotive Parts Manufacturers' Association (APMA)"
-    url: "https://apma.ca/"
+  - name: "GovAI"
+    url: "https://www.governance.ai/research"
     type: web_scrape
-    keywords: ["trade", "tariff", "auto", "rules of origin", "CUSMA"]
-    priority: medium
-
-  - name: "Business Council of Canada"
-    url: "https://thebusinesscouncil.ca/"
-    type: web_scrape
-    keywords: ["trade", "tariff", "united states", "competitiveness"]
-    priority: medium
-
-  - name: "FARA (Foreign Agent Registration Act)"
-    url: "https://efile.fara.gov/ords/fara/f?p=185:1"
-    type: web_scrape
-    keywords: ["canada", "canadian", "Ottawa"]
+    keywords: ["trade", "regulation", "governance"]
     priority: low
 
-# --- MEDIA / WIRE SERVICES ---
-media:
-  - name: "Reuters - Canada"
-    url: "https://www.reuters.com/places/canada"
+business_media:
+  - name: "BNN Bloomberg Canada"
+    url: "https://www.bnnbloomberg.ca"
+    rss_url: "https://www.bnnbloomberg.ca/arc/outboundfeeds/rss/?outputType=xml"
     type: rss
-    rss_url: "https://www.reuters.com/rssFeed/GCA-Canada/"
-    keywords: ["trade", "tariff", "USMCA", "CUSMA", "united states"]
-    priority: medium
+    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "export", "import"]
+    priority: high
 
   - name: "Globe and Mail - Business"
     url: "https://www.theglobeandmail.com/business/"
-    type: web_scrape
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "softwood", "dairy"]
-    priority: medium
+    rss_url: "https://www.theglobeandmail.com/arc/outboundfeeds/rss/category/business/"
+    type: rss
+    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA"]
+    priority: high
 
   - name: "Financial Post"
     url: "https://financialpost.com/"
-    type: rss
     rss_url: "https://financialpost.com/feed"
+    type: rss
     keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA"]
     priority: medium
+
+  - name: "CBC News - Politics"
+    url: "https://www.cbc.ca/news/politics"
+    rss_url: "https://www.cbc.ca/webfeed/rss/rss-politics"
+    type: rss
+    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "export", "bilateral"]
+    priority: high
+
+  - name: "Reuters Canada"
+    url: "https://www.reuters.com/world/americas/"
+    type: web_scrape
+    keywords: ["canada", "trade", "tariff", "USMCA"]
+    priority: medium
+
+  - name: "National Post"
+    url: "https://nationalpost.com"
+    rss_url: "https://nationalpost.com/feed"
+    type: rss
+    keywords: ["trade", "tariff", "united states", "CUSMA"]
+    priority: medium
+
+  - name: "Toronto Star - Business"
+    url: "https://www.thestar.com/business"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states"]
+    priority: low
+
+  - name: "Washington Post - Business"
+    url: "https://www.washingtonpost.com/business/"
+    type: web_scrape
+    keywords: ["canada", "trade", "tariff", "USMCA"]
+    priority: low
 
   - name: "Politico - Trade"
     url: "https://www.politico.com/trade"
@@ -307,37 +241,75 @@ media:
     type: web_scrape
     keywords: ["canada", "USMCA", "CUSMA"]
     priority: high
-    note: "Requires subscription — pipeline will capture headlines only"
+    note: "Requires subscription — captures headlines only"
 
-  - name: "CBC News - Politics"
-    url: "https://www.cbc.ca/news/politics"
-    type: rss
-    rss_url: "https://www.cbc.ca/webfeed/rss/rss-politics"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA", "border"]
+industry:
+  - name: "Canadian Manufacturers & Exporters"
+    url: "https://cme-mec.ca/news/"
+    type: web_scrape
+    keywords: ["trade", "tariff", "export", "manufacturing"]
     priority: medium
 
-  - name: "BNN Bloomberg Canada"
-    url: "https://www.bnnbloomberg.ca/"
-    type: rss
-    rss_url: "https://www.bnnbloomberg.ca/arc/outboundfeeds/rss/?outputType=xml"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA"]
+  - name: "Canadian Chamber of Commerce"
+    url: "https://chamber.ca/news/"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
 
-  - name: "iPolitics"
-    url: "https://www.ipolitics.ca/"
-    type: rss
-    rss_url: "https://www.ipolitics.ca/feed/"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "USMCA"]
+  - name: "CFIB (Canadian Federation of Independent Business)"
+    url: "https://www.cfib-fcei.ca/en/media"
+    type: web_scrape
+    keywords: ["trade", "tariff", "small business"]
     priority: medium
 
-  - name: "The Hill (US)"
-    url: "https://thehill.com/"
-    type: rss
-    rss_url: "https://thehill.com/feed/"
-    keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america"]
+  - name: "Automotive Parts Manufacturers (APMA)"
+    url: "https://apma.ca/news/"
+    type: web_scrape
+    keywords: ["trade", "tariff", "auto", "parts", "rules of origin"]
     priority: medium
 
-# --- DISPUTE RESOLUTION / LEGAL ---
+  - name: "Forest Products Association"
+    url: "https://www.fpac.ca/media/news-releases"
+    type: web_scrape
+    keywords: ["lumber", "softwood", "trade", "tariff"]
+    priority: medium
+
+  - name: "Dairy Farmers of Canada"
+    url: "https://dairyfarmersofcanada.ca/en/news-room"
+    type: web_scrape
+    keywords: ["dairy", "trade", "supply management", "tariff"]
+    priority: medium
+
+  - name: "Mining Association of Canada"
+    url: "https://mining.ca/news/"
+    type: web_scrape
+    keywords: ["critical minerals", "trade", "export"]
+    priority: medium
+
+  - name: "Canadian Steel Producers"
+    url: "https://canadiansteel.ca/news/"
+    type: web_scrape
+    keywords: ["steel", "tariff", "section 232", "trade"]
+    priority: medium
+
+  - name: "Business Council of Canada"
+    url: "https://thebusinesscouncil.ca/publications/"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states", "competitiveness"]
+    priority: medium
+
+  - name: "US Chamber of Commerce"
+    url: "https://www.uschamber.com/international"
+    type: web_scrape
+    keywords: ["canada", "trade", "tariff", "USMCA"]
+    priority: medium
+
+  - name: "National Association of Manufacturers"
+    url: "https://www.nam.org/newsroom/"
+    type: web_scrape
+    keywords: ["canada", "trade", "tariff", "USMCA"]
+    priority: low
+
 legal:
   - name: "WTO Dispute Settlement"
     url: "https://www.wto.org/english/tratop_e/dispu_e/dispu_e.htm"
@@ -351,147 +323,96 @@ legal:
     keywords: ["dispute", "panel", "chapter", "review"]
     priority: high
 
-  - name: "NAFTA/CUSMA Secretariat"
-    url: "https://can-mex-usa-sec.org/"
-    type: web_scrape
-    keywords: []
-    priority: high
-
-# ============================================================================
-# v2 NEW: NEWSLETTERS & SUBSTACKS — key policy voices
-# ============================================================================
-newsletters:
+newsletter:
   - name: "POLITICO Morning Trade"
     url: "https://www.politico.com/newsletters/morning-trade"
     type: web_scrape
-    keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america", "softwood", "dairy"]
+    keywords: ["canada", "USMCA", "CUSMA", "tariff"]
     priority: high
-    note: "Doug Palmer's essential daily trade newsletter"
 
-  - name: "Paul Wells - Substack"
+  - name: "Paul Wells (Substack)"
     url: "https://paulwells.substack.com/"
-    type: rss
     rss_url: "https://paulwells.substack.com/feed"
-    keywords: ["trade", "tariff", "united states", "Carney", "bilateral"]
-    priority: high
-    note: "Former Maclean's columnist, key voice on Canadian politics"
-
-  - name: "Capitolism (Scott Lincicome)"
-    url: "https://capitolism.thedispatch.com/"
     type: rss
-    rss_url: "https://capitolism.thedispatch.com/rss/"
-    keywords: ["canada", "tariff", "trade", "USMCA", "protectionism"]
+    keywords: ["trade", "tariff", "united states"]
     priority: medium
-    note: "Cato Institute trade analyst, The Dispatch newsletter"
+
+  - name: "The Line"
+    url: "https://theline.substack.com/"
+    rss_url: "https://theline.substack.com/feed"
+    type: rss
+    keywords: ["trade", "tariff", "united states"]
+    priority: medium
 
   - name: "Trade Vistas (Hinrich Foundation)"
     url: "https://tradevistas.org/"
-    type: web_scrape
-    keywords: ["canada", "USMCA", "CUSMA", "north america", "tariff"]
+    rss_url: "https://tradevistas.org/feed/"
+    type: rss
+    keywords: ["canada", "USMCA", "north america", "tariff"]
     priority: medium
 
   - name: "C.D. Howe Intelligence Memos"
     url: "https://www.cdhowe.org/intelligence-memos"
     type: web_scrape
-    keywords: ["trade", "tariff", "united states", "CUSMA", "border"]
+    keywords: ["trade", "tariff", "united states"]
     priority: high
-    note: "Short-form policy briefs from Canada's premier economic think tank"
 
-  - name: "The Line (Jen Gerson)"
-    url: "https://theline.substack.com/"
+  - name: "Routine Proceedings"
+    url: "https://routineproceedings.com/"
+    rss_url: "https://routineproceedings.com/feed/"
     type: rss
-    rss_url: "https://theline.substack.com/feed"
-    keywords: ["trade", "tariff", "united states", "Carney", "economic"]
+    keywords: ["trade", "tariff", "united states"]
+    priority: low
+
+  - name: "LexSage Trade Law"
+    url: "https://lexsage.com/blog/"
+    type: web_scrape
+    keywords: ["trade", "tariff", "CUSMA", "anti-dumping", "countervailing"]
     priority: medium
 
-  - name: "Routine Proceedings (Dale Smith)"
-    url: "https://routine-proceedings.com/"
-    type: rss
-    rss_url: "https://routine-proceedings.com/feed/"
-    keywords: ["trade", "tariff", "united states", "CUSMA", "committee"]
-    priority: medium
-    note: "Daily parliamentary recap — catches trade references in committees"
-
-# ============================================================================
-# v2 NEW: COMMENTARY — columnists and analysis blogs
-# ============================================================================
 commentary:
-  - name: "PIIE Trade & Investment Policy Watch"
+  - name: "Dan Ciuriak"
+    url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=455532"
+    type: web_scrape
+    keywords: ["trade", "tariff", "canada"]
+    priority: medium
+
+  - name: "PIIE Trade Watch"
     url: "https://www.piie.com/blogs/trade-and-investment-policy-watch"
-    type: rss
-    rss_url: "https://www.piie.com/blogs/trade-and-investment-policy-watch/feed"
-    keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america"]
+    type: web_scrape
+    keywords: ["canada", "USMCA", "tariff"]
     priority: high
-    note: "Chad Bown, Gary Hufbauer, Jeffrey Schott blog here"
 
-  - name: "Dan Ciuriak - Publications"
-    url: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2456382"
-    type: web_scrape
-    keywords: ["trade", "tariff", "canada", "digital", "data"]
-    priority: medium
-    note: "Former deputy chief economist at Global Affairs Canada"
-
-  - name: "Trade Lawyers Blog (Cyndee Todgham Cherniak)"
-    url: "https://www.lexsage.com/blog/"
-    type: web_scrape
-    keywords: ["trade", "tariff", "CUSMA", "customs", "duty", "canada"]
-    priority: high
-    note: "Leading Canadian trade law commentary"
-
-  - name: "CSIS Scholl Chair - Trade"
-    url: "https://www.csis.org/programs/scholl-chair-international-business"
-    type: web_scrape
-    keywords: ["canada", "USMCA", "trade", "tariff", "north america"]
-    priority: medium
-    note: "Bill Reinsch, Scott Miller analysis"
-
-  - name: "Flavio Volpe - APMA Commentary"
-    url: "https://apma.ca/news/"
-    type: web_scrape
-    keywords: ["trade", "tariff", "auto", "rules of origin", "CUSMA", "united states"]
-    priority: medium
-    note: "Canada's most outspoken auto industry voice"
-
-# ============================================================================
-# v2 NEW: PODCASTS — RSS feeds capture episode titles + show notes
-# ============================================================================
-podcasts:
-  - name: "Trade Talks (Bown & Irwin)"
-    url: "https://www.tradetalkspodcast.com/"
+podcast:
+  - name: "Trade Talks Podcast"
+    url: "https://tradetalkspodcast.com/"
+    rss_url: "https://feeds.simplecast.com/7JTCbP39"
     type: rss
-    rss_url: "https://feeds.megaphone.fm/TPG3834063838"
     keywords: ["canada", "USMCA", "CUSMA", "tariff", "north america"]
     priority: medium
-    note: "Chad Bown (PIIE) + Doug Irwin (Dartmouth)"
 
-  - name: "Canusa Street Podcast"
-    url: "https://www.canusastreet.com/"
+  - name: "CSIS Trade Guys"
+    url: "https://www.csis.org/podcasts/trade-guys"
+    rss_url: "https://feeds.megaphone.fm/trade-guys"
     type: rss
-    rss_url: "https://feeds.buzzsprout.com/1934633.rss"
-    keywords: ["trade", "tariff", "bilateral", "border", "CUSMA", "USMCA"]
-    priority: high
-    note: "Dedicated US-Canada relations podcast"
-
-  - name: "The Herle Burly"
-    url: "https://www.theherleburly.com/"
-    type: rss
-    rss_url: "https://feeds.simplecast.com/0TRwUfmK"
-    keywords: ["trade", "tariff", "united states", "Carney", "economy"]
+    keywords: ["canada", "USMCA", "tariff"]
     priority: medium
-    note: "David Herle - Canadian political strategist + pollster"
+
+  - name: "Canusa Street Podcast (Wilson Center)"
+    url: "https://www.wilsoncenter.org/canusa-street-podcast"
+    type: web_scrape
+    keywords: ["trade", "tariff", "bilateral", "canada"]
+    priority: high
+
+  - name: "Herle Burly Podcast"
+    url: "https://herleburly.com/"
+    rss_url: "https://feeds.simplecast.com/DCU4p3pa"
+    type: rss
+    keywords: ["trade", "tariff", "united states"]
+    priority: low
 
   - name: "Paul Wells Show"
     url: "https://paulwells.substack.com/"
-    type: rss
-    rss_url: "https://api.substack.com/feed/podcast/11589/private"
-    keywords: ["trade", "tariff", "united states", "Carney", "bilateral"]
-    priority: medium
-    note: "Podcast companion to Paul Wells' newsletter"
-
-  - name: "Trade Guys (CSIS)"
-    url: "https://www.csis.org/podcasts/trade-guys"
-    type: rss
-    rss_url: "https://feeds.megaphone.fm/CSIS8860498498"
-    keywords: ["canada", "USMCA", "tariff", "trade", "north america"]
-    priority: medium
-    note: "Bill Reinsch + Scott Miller weekly trade podcast"
+    type: web_scrape
+    keywords: ["trade", "tariff", "united states"]
+    priority: low
