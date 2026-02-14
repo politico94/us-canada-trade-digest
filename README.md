@@ -1,60 +1,64 @@
-# 🇺🇸🇨🇦 US-Canada Trade Policy Daily Digest (Free)
+# 🇺🇸🇨🇦 US-Canada Trade Policy Daily Digest v2
 
-An automated pipeline that monitors 40+ government, legislative, think tank, and media sources for US-Canada trade policy developments. No API keys. No costs. Just fetch, filter, and publish.
+Automated daily intelligence gathering on US-Canada trade policy. Inspired by Alexander Panetta's systematic approach to finding Canada-related scoops through US government source monitoring.
 
-## How it works
+## What's New in v2
 
+**🎙️ Thought Leader Watch** — Tracks 100+ named voices across the US-Canada trade policy landscape:
+- Government officials (USTR, Global Affairs, ambassadors)
+- Congressional/parliamentary figures
+- Think tank analysts (C.D. Howe, PIIE, Wilson Center, CSIS)
+- Trade lawyers and industry voices
+- Key journalists and commentators
+
+**📡 Expanded Sources** — Now monitors 50+ sources including:
+- Newsletters (Morning Trade, Paul Wells, Capitolism, C.D. Howe Intelligence Memos)
+- Podcasts (Trade Talks, Canusa Street, Herle Burly, Trade Guys)
+- Commentary blogs (PIIE Trade Watch, LexSage, CSIS Scholl Chair)
+
+**🔧 Quality Improvements:**
+- Minimum relevance score raised from 1.0 → 3.0
+- Requires 2+ keyword matches (was 1)
+- URL blocklist filters social media, login pages, navigation junk
+- Minimum title length raised to 20 characters
+- Name-based relevance boost for tracked thought leaders
+
+## Digest Sections
+
+| Section | What It Catches |
+|---------|----------------|
+| ⚖️ Trade Actions & Regulations | Tariff notices, executive orders, regulatory changes |
+| 🏛️ Legislation & Hearings | Bills, committee hearings, floor speeches |
+| 🤝 Diplomatic Developments | Bilateral meetings, ambassador statements |
+| 🏭 Industry Impact | Business reactions, sector-specific developments |
+| 📊 Analysis & Commentary | Think tank reports, policy papers |
+| ⚔️ Disputes & Legal | WTO panels, CUSMA dispute proceedings |
+| 🎙️ Thought Leader Watch | **NEW** — Key voices weighing in today |
+
+## How It Works
+
+Zero API costs. No AI summarization.
+
+1. **Fetch** — RSS, APIs, and web scraping across 50+ sources
+2. **Score** — Weighted keyword taxonomy + thought leader name matching
+3. **Filter** — Min score 3.0, min 2 keywords, URL blocklist
+4. **Deduplicate** — Hash + Jaccard title similarity
+5. **Categorize** — Route to best-fit section (leader mentions → Thought Leader Watch)
+6. **Publish** — HTML digest to GitHub Pages, daily archive
+
+## Deployment
+
+Runs via GitHub Actions at 6:30 AM ET daily. Published to GitHub Pages.
+
+```bash
+# Local test
+pip install -r requirements.txt
+python pipeline.py --dry-run
+
+# Full run
+python pipeline.py
 ```
-40+ sources → Fetch → Keyword filter → Deduplicate → Categorize → Publish
-```
 
-Every morning at 6:30 AM ET, GitHub Actions runs the pipeline for free. It publishes to GitHub Pages — your digest gets its own URL.
+## Live
 
-**Total cost: $0.**
-
-## What you get
-
-Headlines and links, filtered by relevance and organized into six sections:
-
-| Section | What it covers |
-|---------|---------------|
-| ⚖️ Trade Actions | Tariffs, duties, regulatory moves, executive orders |
-| 🏛️ Legislation | Bills, hearings, committee testimony, Hansard |
-| 🤝 Diplomatic | Bilateral meetings, negotiations, statements |
-| 🏭 Industry Impact | Business/sector effects, supply chain disruptions |
-| 📊 Analysis | Think tank papers, policy commentary |
-| ⚔️ Disputes | WTO panels, CUSMA disputes, legal rulings |
-
-Plus a trade policy dad joke.
-
-## Setup (from browser — no terminal needed)
-
-1. **Create a GitHub account** at [github.com](https://github.com) (free)
-2. **Create a new repo** at [github.com/new](https://github.com/new) — name it `us-canada-trade-digest`, set to **Public**
-3. **Upload files** — click "uploading an existing file", drag in all the files from this folder (including the hidden `.github` folder)
-4. **Enable Pages** — go to Settings → Pages → Source: **GitHub Actions**
-5. **Run it** — go to Actions tab → "Daily US-Canada Trade Digest" → Run workflow
-
-Your digest will be live at `https://YOUR_USERNAME.github.io/us-canada-trade-digest/`
-
-It runs automatically every morning after that.
-
-## Want AI summaries later?
-
-The paid version adds Claude-powered summaries of each item. To upgrade:
-1. Get an API key at [console.anthropic.com](https://console.anthropic.com)
-2. Add it as a repo secret called `ANTHROPIC_API_KEY`
-3. Swap `pipeline.py` for the paid version
-
-## Customize
-
-**Add sources:** Edit `sources.yaml` — copy any block, change the fields.
-
-**Adjust keywords:** Edit `KEYWORDS` in `pipeline.py`. Three tiers:
-- High (3x weight): "CUSMA", "softwood lumber", "retaliatory tariff"
-- Medium (2x): "bilateral trade", "auto rules of origin"
-- Low (1x): "canada", "tariff", "export"
-
-## Disclaimer
-
-This is not journalism. It's automated keyword filtering — a robot version of checking six websites every morning. All items link to primary sources.
+📰 **[politico94.github.io/us-canada-trade-digest](https://politico94.github.io/us-canada-trade-digest)**
