@@ -67,7 +67,7 @@ CONFIG = {
     "lookback_hours": 28,
     "request_timeout": 15,
     "min_relevance_score": 3.0,
-    "min_keywords_matched": 2,       # Must match 2+ TRADE keywords (leaders don't count)
+    "min_keywords_matched": 1,       # Must match 1+ TRADE keyword (context keywords don't count)
     "min_title_length": 20,
     "max_undated_score": 4.0,        # v3: cap score for items without a parseable date
     "digest_sections": [
@@ -111,6 +111,22 @@ KEYWORDS = {
         "united states", "trade link", "supply chain",
         "export", "import", "trade",
     ],
+}
+
+# v3: Context keywords — boost relevance score but do NOT count toward
+# the min_keywords_matched trade keyword requirement. This prevents
+# "canada" alone from qualifying an item, while still rewarding items
+# that mention Canada alongside actual trade terms.
+CONTEXT_KEYWORDS = {
+    "canada": 1.0,
+    "canadian": 1.0,
+    "ottawa": 0.5,
+    "parliament": 0.5,
+    "washington": 0.5,
+    "congress": 0.5,
+    "NATO": 0.5,
+    "NORAD": 0.5,
+    "G7": 0.5,
 }
 
 # v3: Separate list of TRADE-CONTEXT keywords used for co-occurrence check
@@ -429,6 +445,13 @@ class Filter:
                 if kw not in matched:
                     matched.append(kw)
                     trade_matched.append(kw)
+
+        # v3: Context keywords — boost score but do NOT count as trade keywords
+        for kw, weight in CONTEXT_KEYWORDS.items():
+            if kw.lower() in text:
+                score += weight
+                if kw not in matched:
+                    matched.append(kw)
 
         # v3: Thought leader name matching WITH co-occurrence requirement
         leaders_found = []
