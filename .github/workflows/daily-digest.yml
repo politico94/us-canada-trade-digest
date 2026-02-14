@@ -1,43 +1,35 @@
-name: Daily Trade Digest v2
+name: Daily Trade Digest v3
 
 on:
   schedule:
     - cron: '30 11 * * *'  # 6:30 AM ET (11:30 UTC)
-  workflow_dispatch:        # Manual trigger
+  workflow_dispatch:         # Manual trigger
 
 permissions:
   contents: write
   pages: write
-  id-token: write
 
 jobs:
-  build-digest:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run digest pipeline
+      - name: Run pipeline
         run: python pipeline.py
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output
-          keep_files: true
-          destination_dir: .
-
-      - name: Archive digest
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./archive
-          keep_files: true
-          destination_dir: archive
+      - name: Commit and push
+        run: |
+          git config user.name "Trade Digest Bot"
+          git config user.email "bot@trade-digest.local"
+          git add -A
+          git diff --staged --quiet || git commit -m "Digest $(date -u +%Y-%m-%d)"
+          git push
