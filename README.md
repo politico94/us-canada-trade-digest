@@ -1,49 +1,31 @@
-# 🇺🇸🇨🇦 US-Canada Trade Policy Daily Digest v2
+# 🇺🇸🇨🇦 US-Canada Trade Policy Daily Digest v3
 
-Automated daily intelligence gathering on US-Canada trade policy. Inspired by Alexander Panetta's systematic approach to finding Canada-related scoops through US government source monitoring.
+Automated daily intelligence digest monitoring US-Canada trade policy developments.
 
-## What's New in v2
+## What's New in v3 (Audit Fixes)
 
-**🎙️ Thought Leader Watch** — Tracks 100+ named voices across the US-Canada trade policy landscape:
-- Government officials (USTR, Global Affairs, ambassadors)
-- Congressional/parliamentary figures
-- Think tank analysts (C.D. Howe, PIIE, Wilson Center, CSIS)
-- Trade lawyers and industry voices
-- Key journalists and commentators
+**Relevance filtering overhaul:**
+- **Co-occurrence requirement:** Leader names only boost score when trade keywords also appear in the same item. This prevents off-topic stories (vigils, election law violations) from appearing just because a tracked person is mentioned.
+- **Last-name partial matching removed:** "Ford", "Moe", "Smith" no longer trigger false positives.
+- **Trade keyword minimum:** Items must match 2+ actual trade keywords (leader names don't count toward this).
 
-**📡 Expanded Sources** — Now monitors 50+ sources including:
-- Newsletters (Morning Trade, Paul Wells, Capitolism, C.D. Howe Intelligence Memos)
-- Podcasts (Trade Talks, Canusa Street, Herle Burly, Trade Guys)
-- Commentary blogs (PIIE Trade Watch, LexSage, CSIS Scholl Chair)
+**Source quality fixes:**
+- **Landing page detection:** Program homepages (Wilson Center `/program/`, CSIS `/programs/`) are now filtered out unless the URL contains article-pattern indicators (`/analysis/`, `/blog/`, date slugs, etc.).
+- **URL base deduplication:** Same URL can't appear twice even with different query params.
+- **Undated item score cap:** Items without a parseable date are capped at 4.0 relevance — they can still appear but won't dominate.
 
-**🔧 Quality Improvements:**
-- Minimum relevance score raised from 1.0 → 3.0
-- Requires 2+ keyword matches (was 1)
-- URL blocklist filters social media, login pages, navigation junk
-- Minimum title length raised to 20 characters
-- Name-based relevance boost for tracked thought leaders
+**Template improvements:**
+- **Removed quip/joke feature** — replaced with factual summary line.
+- **Voices banner renamed** to "Mentioned in Trade Context Today" — accurately describes what it shows.
+- **Date stamps on all items** where available; items without dates show source only.
 
-## Digest Sections
+## Architecture
 
-| Section | What It Catches |
-|---------|----------------|
-| ⚖️ Trade Actions & Regulations | Tariff notices, executive orders, regulatory changes |
-| 🏛️ Legislation & Hearings | Bills, committee hearings, floor speeches |
-| 🤝 Diplomatic Developments | Bilateral meetings, ambassador statements |
-| 🏭 Industry Impact | Business reactions, sector-specific developments |
-| 📊 Analysis & Commentary | Think tank reports, policy papers |
-| ⚔️ Disputes & Legal | WTO panels, CUSMA dispute proceedings |
-| 🎙️ Thought Leader Watch | **NEW** — Key voices weighing in today |
-
-## How It Works
-
-Zero API costs. No AI summarization.
-
-1. **Fetch** — RSS, APIs, and web scraping across 50+ sources
-2. **Score** — Weighted keyword taxonomy + thought leader name matching
-3. **Filter** — Min score 3.0, min 2 keywords, URL blocklist
-4. **Deduplicate** — Hash + Jaccard title similarity
-5. **Categorize** — Route to best-fit section (leader mentions → Thought Leader Watch)
+1. **Fetch** — RSS + web scraping across 68 sources
+2. **Score** — Weighted keyword taxonomy + co-occurrence leader matching
+3. **Filter** — Min score 3.0, min 2 trade keywords, URL + landing page blocklist
+4. **Deduplicate** — Hash + Jaccard title similarity + URL dedup
+5. **Categorize** — Route to best-fit section
 6. **Publish** — HTML digest to GitHub Pages, daily archive
 
 ## Deployment
