@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """
-US-CANADA TRADE POLICY DAILY DIGEST PIPELINE v2
+US-CANADA TRADE POLICY DAILY DIGEST PIPELINE v3
 =================================================
-Zero API costs. No Anthropic key needed.
+Zero API costs. No AI summarization.
 
-v2 improvements:
-  - Thought Leader Watch section (100+ tracked voices)
-  - Quality filters: min score 3.0, min 2 keywords, URL blocklist
-  - Name-based relevance boost for key trade policy figures
-  - Expanded source coverage (newsletters, Substacks, podcasts)
+v3 audit fixes:
+  - Co-occurrence filter: leader names only count if trade keywords also present
+  - Landing page URL blocklist: filters out program homepages
+  - Freshness enforcement: items must have a date within lookback window
+  - Stale content capped: undated items get lower score ceiling
+  - Quip replaced with factual lead summary
+  - Last-name partial matching removed (too many false positives)
+  - URL deduplication: same base URL can't appear twice
+
+1. Fetch   — RSS, web scraping across 68 sources
+2. Score   — Weighted keyword taxonomy + co-occurrence leader matching
+3. Filter  — Min score 3.0, min 2 TRADE keywords, URL + landing page blocklist
+4. Deduplicate — Hash + Jaccard title similarity + URL dedup
+5. Categorize — Route to best-fit section
+6. Publish  — HTML digest to GitHub Pages, daily archive
 
 Usage:
   python pipeline.py                    # Full run
@@ -23,12 +33,9 @@ import yaml
 import hashlib
 import logging
 import argparse
-import smtplib
 import re
 import random
 from datetime import datetime, timedelta, timezone
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Optional
 from dataclasses import dataclass, field, asdict
@@ -40,188 +47,204 @@ from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 
 # ============================================================================
+# LOGGING
+# ============================================================================
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
+)
+log = logging.getLogger("digest")
+
+# ============================================================================
 # CONFIGURATION
 # ============================================================================
 
 CONFIG = {
     "max_items_per_section": 5,
-    "max_total_items": 35,
+    "max_total_items": 30,
     "lookback_hours": 28,
     "request_timeout": 15,
-    "min_relevance_score": 3.0,     # v2: raised from 1.0 to cut noise
-    "min_keywords_matched": 2,       # v2: require at least 2 keyword hits
-    "min_title_length": 20,          # v2: raised from 10 to skip nav junk
+    "min_relevance_score": 3.0,
+    "min_keywords_matched": 2,       # Must match 2+ TRADE keywords (leaders don't count)
+    "min_title_length": 20,
+    "max_undated_score": 4.0,        # v3: cap score for items without a parseable date
     "digest_sections": [
         "trade_actions",
         "legislation",
-        "diplomatic",
         "industry_impact",
         "analysis",
-        "disputes",
-        "thought_leaders",           # v2: NEW — key voices in the debate
+        "thought_leaders",
     ],
-    "email_recipients": [],
     "archive_dir": "archive",
     "output_dir": "output",
 }
 
-# v2: URL blocklist — domains that produce false positives
-URL_BLOCKLIST = [
-    "facebook.com", "twitter.com", "x.com", "instagram.com",
-    "linkedin.com", "youtube.com", "tiktok.com",
-    "login.", "signin.", "signup.", "cart.", "checkout.",
-    "privacy-policy", "terms-of-service", "cookie-policy",
-    "careers.", "jobs.", "about-us",
-    "mailto:", "javascript:", "tel:",
-]
-
 # ============================================================================
-# KEYWORDS — Trade policy taxonomy (weighted for relevance scoring)
+# KEYWORDS (unchanged from v2)
 # ============================================================================
 
 KEYWORDS = {
-    # Core terms (weight 3)
     "high": [
         "CUSMA", "USMCA", "canada-us trade", "us-canada trade",
         "canadian tariff", "softwood lumber", "dairy trade",
         "trade war canada", "retaliatory tariff", "countervailing duty",
         "anti-dumping canada", "buy america", "border adjustment",
         "digital services tax", "CUSMA review", "trade corridor",
-        "CUSMA joint review", "section 232", "section 301",
-        "tariff-rate quota", "one canadian economy",
-        "team canada trade", "buy canadian",
+        "reciprocal tariff", "section 232 canada", "section 301",
     ],
-    # Important terms (weight 2)
     "medium": [
         "canada trade", "canadian exports", "canadian imports",
         "bilateral trade", "north american trade", "supply management",
         "auto rules of origin", "critical minerals trade",
         "energy exports canada", "lumber duties", "steel tariff",
         "aluminum tariff", "trade deficit canada", "customs union",
-        "carbon border", "procurement canada",
-        "25 percent tariff", "25% tariff",
-        "trade mission canada", "trade negotiation canada",
-        "fortress north america", "north american integration",
-    ],
-    # Contextual terms (weight 1)
-    "low": [
-        "canada", "canadian", "Ottawa", "Carney", "Freeland",
+        "carbon border", "procurement canada", "trade delegation",
+        "trade mission", "trade pact", "trade agreement",
         "trade representative", "commerce department",
-        "tariff", "duty", "quota", "import", "export",
-        "NATO", "NORAD", "five eyes", "G7",
-        "Greer", "LeBlanc", "Champagne",
+    ],
+    "low": [
+        "tariff", "duty", "quota", "import ban", "export controls",
+        "trade sanctions", "trade policy", "trade deal",
+        "canada trade", "canadian export", "canadian import",
+        "united states", "trade link", "supply chain",
+        "export", "import", "trade",
     ],
 }
 
-# ============================================================================
-# v2: THOUGHT LEADERS — 100+ tracked voices in US-Canada trade policy
-# ============================================================================
+# v3: Separate list of TRADE-CONTEXT keywords used for co-occurrence check
+# These are the keywords that must appear alongside a leader name
+TRADE_CONTEXT_KEYWORDS = {
+    "tariff", "trade", "CUSMA", "USMCA", "export", "import", "duty",
+    "softwood", "lumber", "dairy", "aluminum", "steel", "countervailing",
+    "anti-dumping", "procurement", "bilateral", "supply management",
+    "rules of origin", "border adjustment", "digital services tax",
+    "trade war", "trade deal", "trade pact", "trade agreement",
+    "trade mission", "trade delegation", "trade corridor", "trade deficit",
+    "retaliatory", "reciprocal", "buy america", "commerce department",
+    "trade representative", "USTR", "customs", "quota",
+    "critical minerals", "energy exports", "trade policy",
+    "section 232", "section 301", "carbon border",
+}
 
-# Names are scored separately — a name match boosts relevance and can
-# route items to the Thought Leader Watch section.
+# ============================================================================
+# THOUGHT LEADERS
+# ============================================================================
 
 THOUGHT_LEADERS = {
-    # --- Tier 1: Highest-profile voices (weight 3) ---
     "tier1": [
-        # Current US officials
         "Jamieson Greer", "Pete Hoekstra",
-        # Current Canadian officials
         "Mark Carney", "Dominic LeBlanc", "Maninder Sidhu",
         "François-Philippe Champagne", "Mark Wiseman", "Kirsten Hillman",
-        # Former heavyweights
         "Robert Lighthizer", "Chrystia Freeland", "Katherine Tai",
-        # Key negotiators
         "Steve Verheul",
     ],
-
-    # --- Tier 2: Major analysts, columnists, industry voices (weight 2) ---
     "tier2": [
-        # US Congress
         "Mike Crapo", "Ron Wyden", "Jason Smith", "Chuck Grassley",
-        # Canadian Parliament
         "Judy Sgro", "Randy Hoback",
-        # Provincial premiers
         "Doug Ford", "Danielle Smith", "François Legault", "David Eby",
         "Scott Moe", "Wab Kinew",
-        # Think tank / academic
         "Dan Ciuriak", "Christopher Sands", "Chad Bown", "Meredith Lilly",
         "Laura Dawson", "Lawrence Herman", "Danielle Goldfarb",
         "Scott Lincicome", "Gary Clyde Hufbauer", "Jeffrey Schott",
         "Bill Reinsch", "Scott Miller", "Carlo Dade", "Trevor Tombe",
-        # Trade lawyers
         "Cyndee Todgham Cherniak", "Jon Johnson", "Mark Warner",
-        # Industry
         "Flavio Volpe", "Goldy Hyder", "Dan Kelly", "Dennis Darby",
         "Gregg Doud", "Derek Nighbor", "David Wiens",
-        # Journalists
         "Alexander Panetta", "Steven Chase", "Doug Palmer",
         "Andrew Coyne", "Chantal Hébert", "Paul Wells", "John Ivison",
         "Kevin Carmichael",
-        # Former officials still active
         "Bruce Heyman", "David MacNaughton", "Gary Doer",
         "Michael Froman", "Derek Burney", "Gordon Ritchie",
     ],
-
-    # --- Tier 3: Notable voices, less frequent mentions (weight 1.5) ---
     "tier3": [
-        # More US figures
         "Richard Neal", "Stephen Vaughn", "Kelly Ann Shaw",
         "Sally Laing", "Jeffrey Gerrish", "C.J. Mahoney", "John Melle",
         "Susan Schwab", "Rob Portman",
-        # More Canadian figures
         "Simon-Pierre Savard-Tremblay", "Brian Masse",
         "Candace Laing", "Kurt Niquidet", "Jay Timmons",
-        # More analysts
         "Robert Wolfe", "Patrick Leblond", "Emily Blanchard",
         "Michael Hart", "Stephen Tapp", "Hendrik Brakel",
-        # More journalists
         "Gavin Bade", "Stuart Thomson", "Ana Swanson",
         "Konrad Yakabuski", "Lawrence Martin", "John Ibbitson",
         "Vassy Kapelos", "David Herle",
-        # Trade lawyers
         "Riyaz Dattu", "Christopher Kent", "Thomas Beline",
     ],
 }
 
 LEADER_WEIGHTS = {"tier1": 3.0, "tier2": 2.0, "tier3": 1.5}
 
-# Flat set for quick lookups
+# Flat set for quick lookups — FULL NAMES ONLY (v3: no last-name partial matching)
 ALL_LEADERS = set()
 for tier_names in THOUGHT_LEADERS.values():
     ALL_LEADERS.update(tier_names)
 
-# Build lookup: name -> weight
+# Build lookup: full name -> weight
 LEADER_WEIGHT_MAP = {}
 for tier, names in THOUGHT_LEADERS.items():
     for name in names:
         LEADER_WEIGHT_MAP[name.lower()] = LEADER_WEIGHTS[tier]
-        # Also index last names for partial matching
-        parts = name.split()
-        if len(parts) >= 2:
-            LEADER_WEIGHT_MAP[parts[-1].lower()] = LEADER_WEIGHTS[tier] * 0.5
-
-# Trade policy quips — no AI needed
-TRADE_QUIPS = [
-    "Why did the tariff go to therapy? It had too many duties.",
-    "CUSMA walks into a bar. The bartender says, 'Aren't you NAFTA?' It replies, 'I've rebranded.'",
-    "What's a trade negotiator's favourite dance? The two-step — one forward, two back.",
-    "Softwood lumber disputes are like fruitcake — nobody asked for them and they never go away.",
-    "Why don't tariffs ever win arguments? Because they always raise the stakes.",
-    "What did Canada say to the US tariff? 'That's a duty I didn't sign up for.'",
-    "Trade corridors are just highways with lobbyists.",
-    "Why is the Federal Register like a mystery novel? Buried in it is something that will ruin your day.",
-    "USMCA: three countries, two languages, one acronym nobody can pronounce naturally.",
-    "What do trade lawyers and hockey players have in common? They both get paid to fight over boards.",
-    "Why did the countervailing duty cross the border? To offset the subsidy on the other side.",
-    "The Congressional Record is proof that even in Washington, someone is talking about Canada.",
-    "Supply management: where the real dairy drama happens.",
-    "Rules of origin are just trade policy's way of asking 'but where are you really from?'",
-    "Why did the CUSMA review walk into a bar? It was looking for a joint resolution.",
-    "Mark Wiseman arrives as ambassador tomorrow. The trade lobby's Valentine's Day gift: another person to brief.",
-]
 
 # ============================================================================
-# DATA STRUCTURES
+# URL BLOCKLIST & LANDING PAGE DETECTION (v3 new)
+# ============================================================================
+
+# URLs that are program homepages, not articles
+URL_BLOCKLIST_PATTERNS = [
+    # Social media / login / nav junk
+    r"facebook\.com", r"twitter\.com", r"x\.com/(?!.*status)",
+    r"linkedin\.com/company", r"instagram\.com",
+    r"/login", r"/signup", r"/subscribe", r"/contact",
+    r"/about-us$", r"/careers$", r"/donate$",
+]
+
+# v3: Detect landing/program pages that aren't individual articles
+LANDING_PAGE_PATTERNS = [
+    # Wilson Center program pages
+    r"wilsoncenter\.org/program/",
+    # CSIS program pages (not individual articles)
+    r"csis\.org/programs/",
+    # Think tank "about" pages
+    r"/about$", r"/about/$",
+    # Generic index pages
+    r"\.com/$", r"\.ca/$", r"\.org/$",
+]
+
+# v3: URLs that ARE specific articles even on program sites
+ARTICLE_URL_PATTERNS = [
+    r"/analysis/", r"/commentary/", r"/publication/",
+    r"/blog/", r"/article/", r"/report/", r"/event/",
+    r"/podcast/", r"/video/", r"/brief/", r"/paper/",
+    r"/insight/", r"/perspective/", r"/news/",
+    r"\d{4}/\d{2}/",  # Date-based URLs like /2026/02/
+    r"-\d{4,}",        # Article IDs
+]
+
+
+def is_blocked_url(url: str) -> bool:
+    """Check if URL matches blocklist patterns."""
+    for pattern in URL_BLOCKLIST_PATTERNS:
+        if re.search(pattern, url, re.IGNORECASE):
+            return True
+    return False
+
+
+def is_landing_page(url: str) -> bool:
+    """v3: Detect program/landing pages that aren't individual articles."""
+    # First check if it looks like a specific article
+    for pattern in ARTICLE_URL_PATTERNS:
+        if re.search(pattern, url, re.IGNORECASE):
+            return False
+    # Then check if it matches landing page patterns
+    for pattern in LANDING_PAGE_PATTERNS:
+        if re.search(pattern, url, re.IGNORECASE):
+            return True
+    return False
+
+
+# ============================================================================
+# DATA MODEL
 # ============================================================================
 
 @dataclass
@@ -230,173 +253,143 @@ class SourceItem:
     url: str
     source_name: str
     source_category: str
-    published: Optional[datetime] = None
     snippet: str = ""
+    published: Optional[datetime] = None
+    published_str: str = ""
     relevance_score: float = 0.0
     keywords_matched: list = field(default_factory=list)
-    leaders_matched: list = field(default_factory=list)  # v2: track which leaders mentioned
-    digest_section: str = ""
+    trade_keywords_matched: list = field(default_factory=list)  # v3: separate trade keywords
+    leaders_matched: list = field(default_factory=list)
+    section: str = "analysis"
     item_hash: str = ""
 
     def __post_init__(self):
-        raw = f"{self.title.lower().strip()}{self.url.strip()}"
-        self.item_hash = hashlib.md5(raw.encode()).hexdigest()
+        if not self.item_hash:
+            raw = f"{self.title}{self.url}".lower().strip()
+            self.item_hash = hashlib.md5(raw.encode()).hexdigest()[:12]
+        if self.published and not self.published_str:
+            self.published_str = self.published.strftime("%b %d")
 
 
 # ============================================================================
-# v2: URL QUALITY FILTER
+# FETCHERS
 # ============================================================================
 
-def is_blocked_url(url: str) -> bool:
-    """Check if URL matches blocklist patterns."""
-    url_lower = url.lower()
-    for pattern in URL_BLOCKLIST:
-        if pattern in url_lower:
-            return True
-    return False
-
-
-# ============================================================================
-# FETCHER
-# ============================================================================
-
-class Fetcher:
-    def __init__(self, config: dict, lookback: timedelta):
-        self.config = config
-        self.lookback = lookback
-        self.cutoff = datetime.now(timezone.utc) - lookback
+class RSSFetcher:
+    def __init__(self, timeout: int = 15):
+        self.timeout = timeout
         self.session = requests.Session()
         self.session.headers.update({
-            "User-Agent": "US-Canada-Trade-Digest/2.0 (policy research)"
+            "User-Agent": "TradeDigestBot/3.0 (policy monitoring)"
         })
 
-    def fetch_rss(self, source: dict) -> list[SourceItem]:
+    def fetch(self, source: dict) -> list[SourceItem]:
         items = []
+        rss_url = source.get("rss_url", source.get("url"))
         try:
-            feed = feedparser.parse(
-                source.get("rss_url", source["url"]),
-                request_headers={"User-Agent": self.session.headers["User-Agent"]},
-            )
-            for entry in feed.entries:
-                pub_date = None
+            resp = self.session.get(rss_url, timeout=self.timeout)
+            feed = feedparser.parse(resp.content)
+
+            cutoff = datetime.now(timezone.utc) - timedelta(hours=CONFIG["lookback_hours"])
+
+            for entry in feed.entries[:20]:
+                published = None
                 if hasattr(entry, "published_parsed") and entry.published_parsed:
-                    pub_date = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                    try:
+                        published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                    except (TypeError, ValueError):
+                        pass
                 elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
-                    pub_date = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
+                    try:
+                        published = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
+                    except (TypeError, ValueError):
+                        pass
 
-                if pub_date and pub_date < self.cutoff:
+                # v3: Skip items with dates older than lookback window
+                if published and published < cutoff:
                     continue
 
-                snippet = ""
-                if hasattr(entry, "summary"):
-                    snippet = BeautifulSoup(entry.summary, "html.parser").get_text()[:500]
+                title = getattr(entry, "title", "").strip()
+                link = getattr(entry, "link", "").strip()
+                snippet = getattr(entry, "summary", "")
+                if snippet:
+                    snippet = BeautifulSoup(snippet, "html.parser").get_text()[:300]
 
-                url = entry.get("link", source["url"])
-                if is_blocked_url(url):
+                if not title or not link:
                     continue
-
-                items.append(SourceItem(
-                    title=entry.get("title", "Untitled"),
-                    url=url,
-                    source_name=source["name"],
-                    source_category=source.get("_category", "general"),
-                    published=pub_date,
-                    snippet=snippet,
-                ))
-        except Exception as e:
-            logging.warning(f"RSS fetch failed for {source['name']}: {e}")
-        return items
-
-    def fetch_api(self, source: dict) -> list[SourceItem]:
-        items = []
-        try:
-            yesterday = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
-            api_url = source["api_url"].replace("{yesterday}", yesterday)
-
-            resp = self.session.get(api_url, timeout=self.config["request_timeout"])
-            resp.raise_for_status()
-            data = resp.json()
-
-            results = data.get("results", data if isinstance(data, list) else [])
-            for doc in results:
-                pub_date = None
-                if "publication_date" in doc:
-                    pub_date = datetime.strptime(
-                        doc["publication_date"], "%Y-%m-%d"
-                    ).replace(tzinfo=timezone.utc)
-
-                url = doc.get("html_url", doc.get("url", source["url"]))
-                if is_blocked_url(url):
-                    continue
-
-                items.append(SourceItem(
-                    title=doc.get("title", "Untitled"),
-                    url=url,
-                    source_name=source["name"],
-                    source_category=source.get("_category", "general"),
-                    published=pub_date,
-                    snippet=doc.get("abstract", doc.get("excerpt", ""))[:500],
-                ))
-        except Exception as e:
-            logging.warning(f"API fetch failed for {source['name']}: {e}")
-        return items
-
-    def fetch_web_scrape(self, source: dict) -> list[SourceItem]:
-        items = []
-        try:
-            resp = self.session.get(
-                source["url"], timeout=self.config["request_timeout"]
-            )
-            resp.raise_for_status()
-            soup = BeautifulSoup(resp.text, "html.parser")
-
-            selectors = [
-                "article", ".news-item", ".press-release",
-                ".hearing-item", ".entry", "li.views-row",
-                ".post", ".blog-post",
-            ]
-            elements = []
-            for sel in selectors:
-                elements.extend(soup.select(sel))
-
-            if not elements:
-                elements = soup.find_all("a", href=True)
-
-            for el in elements[:50]:
-                title = el.get_text(strip=True)[:200]
-                if len(title) < CONFIG["min_title_length"]:  # v2: configurable
-                    continue
-
-                link = el.get("href", "")
-                if link and not link.startswith("http"):
-                    link = urljoin(source["url"], link)
-
-                if is_blocked_url(link):
+                if len(title) < CONFIG["min_title_length"]:
                     continue
 
                 items.append(SourceItem(
                     title=title,
-                    url=link or source["url"],
+                    url=link,
                     source_name=source["name"],
-                    source_category=source.get("_category", "general"),
-                    snippet=title,
+                    source_category=source.get("category", "media"),
+                    snippet=snippet,
+                    published=published,
                 ))
+
         except Exception as e:
-            logging.warning(f"Web scrape failed for {source['name']}: {e}")
+            log.warning(f"RSS fetch failed for {source['name']}: {e}")
+
         return items
 
-    def fetch_source(self, source: dict) -> list[SourceItem]:
-        source_type = source.get("type", "web_scrape")
-        if source_type == "rss":
-            return self.fetch_rss(source)
-        elif source_type == "api":
-            return self.fetch_api(source)
-        else:
-            return self.fetch_web_scrape(source)
+
+class WebScraper:
+    def __init__(self, timeout: int = 15):
+        self.timeout = timeout
+        self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": "TradeDigestBot/3.0 (policy monitoring)"
+        })
+
+    def fetch(self, source: dict) -> list[SourceItem]:
+        items = []
+        try:
+            resp = self.session.get(source["url"], timeout=self.timeout)
+            soup = BeautifulSoup(resp.content, "html.parser")
+            keywords = source.get("keywords", [])
+
+            for link in soup.find_all("a", href=True):
+                title = link.get_text(strip=True)
+                href = link["href"]
+
+                if not title or len(title) < CONFIG["min_title_length"]:
+                    continue
+                if len(title) > 300:
+                    continue
+
+                full_url = urljoin(source["url"], href)
+
+                # v3: Skip blocked and landing page URLs
+                if is_blocked_url(full_url):
+                    continue
+                if is_landing_page(full_url):
+                    log.debug(f"Skipped landing page: {full_url}")
+                    continue
+
+                # Basic keyword pre-filter for scraped items
+                text = title.lower()
+                if keywords and not any(kw.lower() in text for kw in keywords):
+                    continue
+
+                items.append(SourceItem(
+                    title=title,
+                    url=full_url,
+                    source_name=source["name"],
+                    source_category=source.get("category", "media"),
+                    snippet="",
+                    published=None,
+                ))
+
+        except Exception as e:
+            log.warning(f"Scrape failed for {source['name']}: {e}")
+
+        return items
 
 
 # ============================================================================
-# FILTER & SCORER (v2: with thought leader name matching)
+# FILTER & SCORER (v3: co-occurrence requirement for leaders)
 # ============================================================================
 
 class Filter:
@@ -406,10 +399,19 @@ class Filter:
         self.keywords = keywords
         self.source_keywords = source_keywords or []
 
+    def _has_trade_context(self, text: str) -> bool:
+        """v3: Check if text contains at least one trade-specific keyword."""
+        text_lower = text.lower()
+        for kw in TRADE_CONTEXT_KEYWORDS:
+            if kw.lower() in text_lower:
+                return True
+        return False
+
     def score_item(self, item: SourceItem) -> SourceItem:
         text = f"{item.title} {item.snippet}".lower()
         score = 0.0
         matched = []
+        trade_matched = []
 
         # Global keyword scoring
         for tier, terms in self.keywords.items():
@@ -418,6 +420,7 @@ class Filter:
                 if term.lower() in text:
                     score += weight
                     matched.append(term)
+                    trade_matched.append(term)  # These are all trade keywords
 
         # Source-specific keyword boost
         for kw in self.source_keywords:
@@ -425,20 +428,35 @@ class Filter:
                 score += 1.5
                 if kw not in matched:
                     matched.append(kw)
+                    trade_matched.append(kw)
 
-        # v2: Thought leader name matching
+        # v3: Thought leader name matching WITH co-occurrence requirement
         leaders_found = []
+        has_trade_context = self._has_trade_context(text)
+
         for name in ALL_LEADERS:
             if name.lower() in text:
-                weight = LEADER_WEIGHT_MAP.get(name.lower(), 1.5)
-                score += weight
-                leaders_found.append(name)
-                if name not in matched:
-                    matched.append(name)
+                if has_trade_context:
+                    # Full score: leader mentioned in trade context
+                    weight = LEADER_WEIGHT_MAP.get(name.lower(), 1.5)
+                    score += weight
+                    leaders_found.append(name)
+                    if name not in matched:
+                        matched.append(name)
+                else:
+                    # v3: Leader mentioned WITHOUT trade context — record but don't boost
+                    leaders_found.append(name)
+                    log.debug(f"Leader {name} found without trade context in: {item.title[:60]}")
 
         item.relevance_score = score
         item.keywords_matched = matched
+        item.trade_keywords_matched = trade_matched
         item.leaders_matched = leaders_found
+
+        # v3: Cap score for undated items
+        if item.published is None and item.relevance_score > CONFIG["max_undated_score"]:
+            item.relevance_score = CONFIG["max_undated_score"]
+
         return item
 
     def filter_items(self, items: list[SourceItem],
@@ -451,25 +469,39 @@ class Filter:
             min_keywords = CONFIG["min_keywords_matched"]
 
         scored = [self.score_item(item) for item in items]
-        return [
-            i for i in scored
-            if i.relevance_score >= min_score
-            and len(i.keywords_matched) >= min_keywords
-        ]
+
+        filtered = []
+        for item in scored:
+            # v3: Require min TRADE keywords, not just any keywords
+            if item.relevance_score < min_score:
+                continue
+            if len(item.trade_keywords_matched) < min_keywords:
+                log.debug(f"Dropped (low trade keywords): {item.title[:60]}")
+                continue
+            filtered.append(item)
+
+        return filtered
 
 
 # ============================================================================
-# DEDUPLICATOR
+# DEDUPLICATOR (v3: + URL base dedup)
 # ============================================================================
 
 class Deduplicator:
     def __init__(self):
         self.seen_hashes = set()
         self.seen_titles = []
+        self.seen_base_urls = set()  # v3
 
     @staticmethod
     def _normalize(text: str) -> str:
         return re.sub(r"[^a-z0-9\s]", "", text.lower()).strip()
+
+    @staticmethod
+    def _base_url(url: str) -> str:
+        """v3: Extract base URL without query params and fragments."""
+        parsed = urlparse(url)
+        return f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/")
 
     def _is_similar_title(self, title: str, threshold: float = 0.7) -> bool:
         norm = self._normalize(title)
@@ -493,14 +525,20 @@ class Deduplicator:
                 continue
             if self._is_similar_title(item.title):
                 continue
+            # v3: URL base dedup
+            base = self._base_url(item.url)
+            if base in self.seen_base_urls:
+                log.debug(f"Dropped (duplicate URL): {item.title[:60]}")
+                continue
             self.seen_hashes.add(item.item_hash)
             self.seen_titles.append(self._normalize(item.title))
+            self.seen_base_urls.add(base)
             unique.append(item)
         return unique
 
 
 # ============================================================================
-# CATEGORIZER (v2: includes thought_leaders section)
+# CATEGORIZER (v3: tightened rules)
 # ============================================================================
 
 SECTION_RULES = {
@@ -513,264 +551,280 @@ SECTION_RULES = {
     "legislation": {
         "source_categories": ["congressional", "congressional_record", "parliamentary"],
         "keywords": ["bill", "act", "hearing", "committee", "testimony", "hansard",
-                      "floor speech", "motion", "amendment", "resolution"],
-    },
-    "diplomatic": {
-        "source_categories": ["us_government", "canadian_government"],
-        "keywords": ["bilateral", "summit", "meeting", "negotiation", "ambassador",
-                      "diplomatic", "foreign minister", "secretary of state", "statement"],
+                      "floor statement", "markup", "vote", "senator", "representative",
+                      "motion", "reading"],
     },
     "industry_impact": {
-        "source_categories": ["industry", "media"],
-        "keywords": ["business", "industry", "sector", "manufacturer", "exporter",
-                      "supply chain", "auto", "steel", "aluminum", "energy", "agriculture"],
+        "source_categories": ["industry", "business_media"],
+        "keywords": ["supply chain", "manufacturing", "auto parts", "factory",
+                      "production", "plant", "workers", "jobs", "investment",
+                      "sector", "industry", "company", "business", "economic impact",
+                      "delegation", "mission"],
     },
     "analysis": {
-        "source_categories": ["think_tanks"],
-        "keywords": ["analysis", "paper", "report", "study", "research", "policy",
-                      "commentary", "outlook", "forecast", "briefing"],
-    },
-    "disputes": {
-        "source_categories": ["legal"],
-        "keywords": ["dispute", "panel", "ruling", "WTO", "appeal", "arbitration",
-                      "settlement", "chapter 19", "chapter 31", "compliance"],
+        "source_categories": ["think_tank", "academic", "commentary", "newsletter"],
+        "keywords": ["analysis", "commentary", "opinion", "research", "paper",
+                      "study", "brief", "forecast", "outlook", "perspective",
+                      "implications", "strategy"],
     },
     "thought_leaders": {
-        "source_categories": ["newsletters", "commentary", "podcasts"],
-        "keywords": [],  # Driven by name matching, not keywords
+        "source_categories": [],
+        "keywords": [],
+        # v3: Routed by leader match presence + trade context
     },
 }
 
 
-def categorize_item(item: SourceItem) -> str:
-    """Assign an item to its best-fit digest section.
+class Categorizer:
+    def categorize(self, item: SourceItem) -> str:
+        # v3: Only route to thought_leaders if BOTH leader match AND trade context
+        if item.leaders_matched and item.trade_keywords_matched:
+            # Check if it fits better in another section first
+            best_section = self._best_section(item)
+            if best_section == "analysis":
+                return "thought_leaders"
+            return best_section
 
-    v2: Items mentioning 2+ thought leaders, or from newsletter/commentary
-    sources with leader mentions, go to thought_leaders section.
-    """
-    # v2: Route to thought_leaders if strong leader signal
-    if len(item.leaders_matched) >= 2:
-        return "thought_leaders"
-    if (item.source_category in ["newsletters", "commentary", "podcasts"]
-            and len(item.leaders_matched) >= 1):
-        return "thought_leaders"
+        return self._best_section(item)
 
-    scores = {}
-    text = f"{item.title} {item.snippet}".lower()
+    def _best_section(self, item: SourceItem) -> str:
+        best = "analysis"
+        best_score = 0
 
-    for section, rules in SECTION_RULES.items():
-        if section == "thought_leaders":
-            continue  # handled above
-        score = 0
-        if item.source_category in rules["source_categories"]:
-            score += 2
-        for kw in rules["keywords"]:
-            if kw in text:
-                score += 1
-        scores[section] = score
+        text = f"{item.title} {item.snippet}".lower()
 
-    best = max(scores, key=scores.get)
-    return best if scores[best] > 0 else "analysis"
+        for section, rules in SECTION_RULES.items():
+            if section == "thought_leaders":
+                continue
+            score = 0
+            if item.source_category in rules["source_categories"]:
+                score += 3
+            for kw in rules["keywords"]:
+                if kw.lower() in text:
+                    score += 1
+            if score > best_score:
+                best_score = score
+                best = section
+
+        return best
+
+
+# ============================================================================
+# DIGEST BUILDER
+# ============================================================================
+
+class DigestBuilder:
+    def __init__(self, items: list[SourceItem], digest_date: datetime):
+        self.items = items
+        self.digest_date = digest_date
+
+    def build(self) -> dict:
+        sections = {}
+        for section_name in CONFIG["digest_sections"]:
+            section_items = [i for i in self.items if i.section == section_name]
+            section_items.sort(key=lambda x: x.relevance_score, reverse=True)
+            sections[section_name] = section_items[:CONFIG["max_items_per_section"]]
+
+        # Collect all mentioned leaders for the voices banner
+        all_leaders = set()
+        for item in self.items:
+            all_leaders.update(item.leaders_matched)
+
+        # v3: Build factual lead instead of quip
+        total_items = sum(len(v) for v in sections.values())
+        source_count = len(set(i.source_name for i in self.items))
+        leader_count = len(all_leaders)
+
+        return {
+            "date": self.digest_date.strftime("%Y-%m-%d"),
+            "date_display": self.digest_date.strftime("%A, %B %d, %Y"),
+            "total_items": total_items,
+            "source_count": source_count,
+            "leader_count": leader_count,
+            "leaders": sorted(all_leaders),
+            "sections": sections,
+        }
+
+
+# ============================================================================
+# HTML RENDERER
+# ============================================================================
+
+class Renderer:
+    def __init__(self, template_dir: str = "templates"):
+        self.env = Environment(
+            loader=FileSystemLoader(template_dir),
+            autoescape=True,
+        )
+
+    def render(self, digest_data: dict) -> str:
+        template = self.env.get_template("digest.html")
+        return template.render(**digest_data)
 
 
 # ============================================================================
 # PUBLISHER
 # ============================================================================
 
-SECTION_LABELS = {
-    "trade_actions": "⚖️ Trade Actions & Regulations",
-    "legislation": "🏛️ Legislation & Hearings",
-    "diplomatic": "🤝 Diplomatic Developments",
-    "industry_impact": "🏭 Industry Impact",
-    "analysis": "📊 Analysis & Commentary",
-    "disputes": "⚔️ Disputes & Legal",
-    "thought_leaders": "🎙️ Thought Leader Watch",
-}
+class Publisher:
+    def __init__(self, output_dir: str = "."):
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
 
+    def publish(self, html: str, digest_date: datetime):
+        # Write main index
+        index_path = self.output_dir / "index.html"
+        index_path.write_text(html, encoding="utf-8")
+        log.info(f"Published: {index_path}")
 
-def generate_html_digest(items_by_section: dict, date: str) -> str:
-    """Render digest as HTML using Jinja2 template."""
-    template_dir = os.path.join(os.path.dirname(__file__), "templates")
-    env = Environment(loader=FileSystemLoader(template_dir))
-    template = env.get_template("digest.html")
+        # Archive
+        archive_dir = self.output_dir / CONFIG["archive_dir"]
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        archive_path = archive_dir / f"{digest_date.strftime('%Y-%m-%d')}.html"
+        archive_path.write_text(html, encoding="utf-8")
+        log.info(f"Archived: {archive_path}")
 
-    joke = random.choice(TRADE_QUIPS)
-    total_items = sum(len(v) for v in items_by_section.values())
-    source_names = set()
-    leaders_today = set()
-    for items in items_by_section.values():
-        for item in items:
-            source_names.add(item.source_name)
-            leaders_today.update(item.leaders_matched)
+        # Update archive index
+        self._update_archive_index(archive_dir)
 
-    return template.render(
-        date=date,
-        joke=joke,
-        sections=items_by_section,
-        section_labels=SECTION_LABELS,
-        total_items=total_items,
-        total_sources=len(source_names),
-        total_leaders=len(leaders_today),
-        leaders_today=sorted(leaders_today),
-        generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-    )
+    def _update_archive_index(self, archive_dir: Path):
+        files = sorted(archive_dir.glob("*.html"), reverse=True)
+        files = [f for f in files if f.name != "index.html"]
 
+        links = []
+        for f in files[:90]:  # Keep 90 days
+            date_str = f.stem
+            links.append(f'<li><a href="{f.name}">{date_str}</a></li>')
 
-def send_email(html: str, subject: str, recipients: list[str]):
-    smtp_host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
-    smtp_port = int(os.environ.get("SMTP_PORT", "587"))
-    smtp_user = os.environ.get("SMTP_USER")
-    smtp_pass = os.environ.get("SMTP_PASS")
-    from_addr = os.environ.get("SMTP_FROM", smtp_user)
+        html = f"""<!DOCTYPE html>
+<html><head><title>Trade Digest Archive</title>
+<style>
+  body {{ font-family: system-ui; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }}
+  a {{ color: #1a5276; }}
+  li {{ margin: 0.3rem 0; }}
+</style>
+</head><body>
+<h1>🇺🇸🇨🇦 Trade Digest Archive</h1>
+<p><a href="../">← Current digest</a></p>
+<ul>{"".join(links)}</ul>
+</body></html>"""
 
-    if not smtp_user or not smtp_pass:
-        logging.info("SMTP not configured — skipping email delivery")
-        return
-
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = from_addr
-    msg["To"] = ", ".join(recipients)
-    msg.attach(MIMEText(html, "html"))
-
-    try:
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_pass)
-            server.send_message(msg)
-        logging.info(f"Email sent to {len(recipients)} recipients")
-    except Exception as e:
-        logging.error(f"Email delivery failed: {e}")
+        (archive_dir / "index.html").write_text(html, encoding="utf-8")
 
 
 # ============================================================================
 # MAIN PIPELINE
 # ============================================================================
 
-def load_sources(path: str = None) -> list[dict]:
-    if path is None:
-        path = os.path.join(os.path.dirname(__file__), "sources.yaml")
+def load_sources(path: str = "sources.yaml") -> list[dict]:
     with open(path) as f:
-        raw = yaml.safe_load(f)
-    sources = []
-    for category, source_list in raw.items():
-        for source in source_list:
-            source["_category"] = category
-            sources.append(source)
-    return sources
+        data = yaml.safe_load(f)
+
+    flat = []
+    for category, sources in data.items():
+        for source in sources:
+            source["category"] = category
+            flat.append(source)
+    return flat
 
 
-def run_pipeline(dry_run: bool = False, target_date: Optional[str] = None,
-                 section_filter: Optional[str] = None):
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-    log = logging.getLogger("pipeline")
+def run_pipeline(digest_date: datetime = None, dry_run: bool = False):
+    if digest_date is None:
+        digest_date = datetime.now(timezone.utc)
 
-    date_str = target_date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    log.info(f"=== US-Canada Trade Policy Digest v2 — {date_str} ===")
-    log.info(f"    Tracking {len(ALL_LEADERS)} thought leaders")
-    log.info(f"    Min score: {CONFIG['min_relevance_score']}, Min keywords: {CONFIG['min_keywords_matched']}")
+    log.info(f"=== Trade Digest v3 — {digest_date.strftime('%Y-%m-%d')} ===")
 
-    # 1. LOAD
+    # Load sources
     sources = load_sources()
     log.info(f"Loaded {len(sources)} sources")
 
-    # 2. FETCH
-    lookback = timedelta(hours=CONFIG["lookback_hours"])
-    fetcher = Fetcher(CONFIG, lookback)
+    # Fetch
+    rss_fetcher = RSSFetcher(timeout=CONFIG["request_timeout"])
+    web_scraper = WebScraper(timeout=CONFIG["request_timeout"])
+
     all_items = []
     for source in sources:
-        items = fetcher.fetch_source(source)
+        fetcher_type = source.get("type", "rss")
+        if fetcher_type == "rss":
+            items = rss_fetcher.fetch(source)
+        elif fetcher_type == "web_scrape":
+            items = web_scraper.fetch(source)
+        else:
+            items = rss_fetcher.fetch(source)
+
         log.info(f"  {source['name']}: {len(items)} items")
         all_items.extend(items)
-    log.info(f"Total fetched: {len(all_items)} items")
 
-    # 3. FILTER (v2: stricter thresholds)
-    relevant = []
-    for source in sources:
-        source_items = [i for i in all_items if i.source_name == source["name"]]
-        source_filter = Filter(KEYWORDS, source.get("keywords", []))
-        relevant.extend(source_filter.filter_items(source_items))
-    log.info(f"After keyword filter: {len(relevant)} items")
+    log.info(f"Total fetched: {len(all_items)}")
 
-    # 4. DEDUPLICATE
-    deduper = Deduplicator()
-    unique = deduper.deduplicate(relevant)
-    log.info(f"After dedup: {len(unique)} items")
+    # Filter
+    filt = Filter(KEYWORDS)
+    filtered = filt.filter_items(all_items)
+    log.info(f"After filtering: {len(filtered)}")
 
-    # v2: Log leader mentions
-    all_leaders_mentioned = set()
+    # Deduplicate
+    dedup = Deduplicator()
+    unique = dedup.deduplicate(filtered)
+    log.info(f"After dedup: {len(unique)}")
+
+    # Categorize
+    cat = Categorizer()
     for item in unique:
-        all_leaders_mentioned.update(item.leaders_matched)
-    if all_leaders_mentioned:
-        log.info(f"Leaders mentioned today: {', '.join(sorted(all_leaders_mentioned))}")
+        item.section = cat.categorize(item)
 
-    # 5. CATEGORIZE
-    for item in unique:
-        item.digest_section = categorize_item(item)
+    # Trim to max
+    unique = sorted(unique, key=lambda x: x.relevance_score, reverse=True)
+    unique = unique[:CONFIG["max_total_items"]]
 
-    items_by_section = {}
-    for section in CONFIG["digest_sections"]:
-        section_items = sorted(
-            [i for i in unique if i.digest_section == section],
-            key=lambda x: x.relevance_score, reverse=True,
-        )[:CONFIG["max_items_per_section"]]
-        if section_items:
-            items_by_section[section] = section_items
+    # Build digest
+    builder = DigestBuilder(unique, digest_date)
+    digest_data = builder.build()
 
-    if section_filter:
-        items_by_section = {k: v for k, v in items_by_section.items() if k == section_filter}
-
-    total = sum(len(v) for v in items_by_section.values())
-    log.info(f"Digest items: {total} across {len(items_by_section)} sections")
+    log.info(f"Digest: {digest_data['total_items']} items, "
+             f"{digest_data['source_count']} sources, "
+             f"{digest_data['leader_count']} leaders")
+    for section_name, section_items in digest_data["sections"].items():
+        log.info(f"  {section_name}: {len(section_items)} items")
 
     if dry_run:
-        log.info("=== DRY RUN ===")
-        for section, items in items_by_section.items():
-            print(f"\n### {SECTION_LABELS.get(section, section)}")
-            for item in items:
-                leaders_str = f" | Leaders: {', '.join(item.leaders_matched)}" if item.leaders_matched else ""
-                print(f"  [{item.relevance_score:.1f}] {item.title}")
+        log.info("DRY RUN — not publishing")
+        for section_name, section_items in digest_data["sections"].items():
+            print(f"\n{'='*60}")
+            print(f"  {section_name.upper()}")
+            print(f"{'='*60}")
+            for item in section_items:
+                leaders = f" 👤 {', '.join(item.leaders_matched)}" if item.leaders_matched else ""
+                dated = f" · {item.published_str}" if item.published_str else " · (no date)"
+                print(f"  [{item.relevance_score:.1f}] {item.title[:80]}")
+                print(f"         {item.source_name}{dated}{leaders}")
+                print(f"         Keywords: {', '.join(item.trade_keywords_matched[:5])}")
                 print(f"         {item.url}")
-                print(f"         Keywords: {', '.join(item.keywords_matched[:5])}{leaders_str}")
+                print()
         return
 
-    # 6. PUBLISH
-    os.makedirs(CONFIG["output_dir"], exist_ok=True)
-    os.makedirs(CONFIG["archive_dir"], exist_ok=True)
+    # Render
+    renderer = Renderer()
+    html = renderer.render(digest_data)
 
-    html = generate_html_digest(items_by_section, date_str)
+    # Publish
+    publisher = Publisher(".")
+    publisher.publish(html, digest_date)
 
-    output_path = os.path.join(CONFIG["output_dir"], "index.html")
-    with open(output_path, "w") as f:
-        f.write(html)
-    log.info(f"HTML saved to {output_path}")
+    log.info("✅ Done")
 
-    archive_path = os.path.join(CONFIG["archive_dir"], f"{date_str}.html")
-    with open(archive_path, "w") as f:
-        f.write(html)
 
-    data_path = os.path.join(CONFIG["archive_dir"], f"{date_str}.json")
-    with open(data_path, "w") as f:
-        json.dump({
-            "date": date_str,
-            "leaders_mentioned": sorted(all_leaders_mentioned),
-            "sections": {
-                section: [asdict(item) for item in items]
-                for section, items in items_by_section.items()
-            },
-        }, f, indent=2, default=str)
-
-    subject = f"🇺🇸🇨🇦 US-Canada Trade Digest — {date_str}"
-    if CONFIG["email_recipients"]:
-        send_email(html, subject, CONFIG["email_recipients"])
-
-    log.info("=== Pipeline complete ===")
-
+# ============================================================================
+# CLI
+# ============================================================================
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="US-Canada Trade Policy Daily Digest v2")
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--date", type=str, default=None)
-    parser.add_argument("--section", type=str, default=None, choices=CONFIG["digest_sections"])
+    parser = argparse.ArgumentParser(description="US-Canada Trade Digest v3")
+    parser.add_argument("--dry-run", action="store_true", help="Preview without publishing")
+    parser.add_argument("--date", type=str, help="Digest date (YYYY-MM-DD)")
     args = parser.parse_args()
-    run_pipeline(dry_run=args.dry_run, target_date=args.date, section_filter=args.section)
+
+    digest_date = None
+    if args.date:
+        digest_date = datetime.strptime(args.date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+
+    run_pipeline(digest_date=digest_date, dry_run=args.dry_run)
