@@ -6,275 +6,392 @@
     <title>US-Canada Trade Policy Digest — {{ date }}</title>
     <style>
         :root {
-            --blue: #002868;
-            --accent: #C8102E;
-            --bg: #FAFAF8;
-            --text: #1a1a1a;
-            --muted: #666;
-            --border: #e0e0e0;
+            --bg: #fafafa;
             --card-bg: #ffffff;
-            --leader-bg: #F0F4FF;
-            --leader-border: #B8C9E8;
+            --text: #1a1a1a;
+            --muted: #6b7280;
+            --accent: #1a5276;
+            --accent-light: #d4e6f1;
+            --border: #e5e7eb;
+            --tag-bg: #f3f4f6;
+            --leader-bg: #fef3c7;
+            --leader-text: #92400e;
+            --red: #dc2626;
+            --green: #16a34a;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.7;
+            line-height: 1.5;
             max-width: 720px;
             margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-        .header {
-            border-bottom: 4px double var(--accent);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .header h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--blue);
-        }
-        .header .subtitle {
-            font-size: 0.95rem;
-            color: var(--muted);
-            margin-top: 0.3rem;
-        }
-        .version-badge {
-            display: inline-block;
-            background: var(--blue);
-            color: #fff;
-            font-size: 0.65rem;
-            padding: 0.1rem 0.4rem;
-            border-radius: 3px;
-            font-family: -apple-system, sans-serif;
-            vertical-align: middle;
-            margin-left: 0.4rem;
-        }
-        .joke {
-            background: #FFF8F0;
-            border-left: 3px solid var(--accent);
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 2rem;
-            font-style: italic;
-            font-size: 0.9rem;
-            color: #555;
+            padding: 1.5rem 1rem;
         }
 
-        /* --- Leaders-mentioned banner --- */
-        .leaders-banner {
-            background: var(--leader-bg);
-            border: 1px solid var(--leader-border);
-            border-radius: 6px;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 2rem;
-            font-family: -apple-system, sans-serif;
-        }
-        .leaders-banner-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--blue);
-            margin-bottom: 0.4rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-        .leader-pill {
-            display: inline-block;
-            background: #fff;
-            border: 1px solid var(--leader-border);
-            color: var(--blue);
-            padding: 0.15rem 0.5rem;
-            border-radius: 12px;
-            margin: 0.15rem 0.2rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .section {
-            margin-bottom: 2.5rem;
-        }
-        .section-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--blue);
-            margin-bottom: 1rem;
-            padding-bottom: 0.4rem;
+        header {
             border-bottom: 2px solid var(--accent);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
-        /* Thought Leader section gets a distinct accent */
-        .section-thought_leaders .section-title {
-            border-bottom-color: var(--blue);
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
         }
+
+        .meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Voices banner — v3: only shows when leaders appeared in trade context */
+        .voices-banner {
+            background: var(--leader-bg);
+            border: 1px solid #fcd34d;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .voices-banner strong {
+            color: var(--leader-text);
+        }
+
+        .voice-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .voice-pill {
+            background: white;
+            border: 1px solid #fbbf24;
+            border-radius: 12px;
+            padding: 0.15rem 0.6rem;
+            font-size: 0.75rem;
+            color: var(--leader-text);
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Items */
         .item {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 0.6rem;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            transition: border-color 0.2s;
         }
-        /* Thought leader items get a subtle left border */
-        .section-thought_leaders .item {
-            border-left: 3px solid var(--blue);
+
+        .item:hover {
+            border-color: var(--accent);
         }
-        .item-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 0.2rem;
-        }
-        .item-title a {
-            color: var(--blue);
+
+        .item a {
+            color: var(--text);
             text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.35;
         }
-        .item-title a:hover { text-decoration: underline; }
+
+        .item a:hover {
+            color: var(--accent);
+        }
+
         .item-meta {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--muted);
-            margin-bottom: 0.3rem;
-            font-family: -apple-system, sans-serif;
+            margin-top: 0.3rem;
         }
+
+        .item-source {
+            font-weight: 500;
+        }
+
+        .item-date {
+            color: var(--muted);
+        }
+
         .item-snippet {
-            font-size: 0.88rem;
-            color: #444;
-            line-height: 1.5;
+            font-size: 0.82rem;
+            color: #4b5563;
+            margin-top: 0.3rem;
+            line-height: 1.4;
         }
-        .item-keywords {
-            margin-top: 0.4rem;
-            font-size: 0.75rem;
+
+        .item-leaders {
+            margin-top: 0.3rem;
         }
-        .keyword-tag {
-            display: inline-block;
-            background: #EEF0F4;
-            color: var(--blue);
-            padding: 0.1rem 0.45rem;
-            border-radius: 3px;
-            margin-right: 0.25rem;
-            margin-top: 0.15rem;
-            font-family: -apple-system, sans-serif;
-        }
-        .leader-tag {
+
+        .leader-badge {
             display: inline-block;
             background: var(--leader-bg);
-            color: var(--blue);
+            color: var(--leader-text);
+            font-size: 0.72rem;
             padding: 0.1rem 0.45rem;
-            border-radius: 3px;
-            margin-right: 0.25rem;
-            margin-top: 0.15rem;
-            font-family: -apple-system, sans-serif;
-            font-weight: 600;
+            border-radius: 8px;
+            margin-right: 0.3rem;
         }
-        .score-bar {
-            display: inline-block;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 2px;
-            margin-left: 0.5rem;
-            vertical-align: middle;
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-top: 0.35rem;
         }
+
+        .tag {
+            background: var(--tag-bg);
+            border-radius: 4px;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        footer a {
+            color: var(--accent);
+        }
+
         .empty-section {
+            font-size: 0.85rem;
             color: var(--muted);
             font-style: italic;
-            font-size: 0.9rem;
+            padding: 0.5rem 0;
         }
-        .footer {
-            border-top: 4px double var(--accent);
-            padding-top: 1.5rem;
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: var(--muted);
-            font-family: -apple-system, sans-serif;
-        }
-        .footer a { color: var(--blue); }
-        .disclaimer {
-            background: #FFF3F3;
-            border: 1px solid #FFCCCC;
-            border-radius: 4px;
-            padding: 0.8rem 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
-        }
-        @media (max-width: 600px) {
-            body { padding: 1rem; }
-            .header h1 { font-size: 1.3rem; }
+
+        @media (max-width: 480px) {
+            body { padding: 1rem 0.75rem; }
+            header h1 { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>🇺🇸🇨🇦 US-Canada Trade Policy Digest <span class="version-badge">v2</span></h1>
-    <div class="subtitle">{{ date }} · {{ total_items }} items from {{ total_sources }} sources{% if total_leaders %} · {{ total_leaders }} thought leaders mentioned{% endif %}</div>
-</div>
+<header>
+    <h1>🇺🇸🇨🇦 US-Canada Trade Policy Digest</h1>
+    <div class="meta">
+        {{ date_display }} · {{ total_items }} items from {{ source_count }} sources
+        {%- if leader_count > 0 %} · {{ leader_count }} thought leaders mentioned{% endif %}
+    </div>
+</header>
 
-<div class="joke">
-    🍁 <strong>Today's Trade Quip:</strong> {{ joke }}
-</div>
-
-{% if leaders_today %}
-<div class="leaders-banner">
-    <div class="leaders-banner-title">🎙️ Voices in Today's Digest</div>
-    {% for leader in leaders_today %}
-    <span class="leader-pill">{{ leader }}</span>
-    {% endfor %}
+{% if leaders %}
+<div class="voices-banner">
+    <strong>🎙️ Mentioned in Trade Context Today</strong>
+    <div class="voice-pills">
+        {% for name in leaders %}
+        <span class="voice-pill">{{ name }}</span>
+        {% endfor %}
+    </div>
 </div>
 {% endif %}
 
-{% for section_key, items in sections.items() %}
-<div class="section section-{{ section_key }}">
-    <div class="section-title">{{ section_labels.get(section_key, section_key) }}</div>
-
-    {% for item in items %}
+<!-- Trade Actions & Regulations -->
+{% if sections.trade_actions %}
+<div class="section">
+    <div class="section-header">⚖️ Trade Actions &amp; Regulations</div>
+    {% for item in sections.trade_actions %}
     <div class="item">
-        <div class="item-title">
-            <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
-            <span class="score-bar" style="width: {{ (item.relevance_score * 4)|int }}px;" title="Relevance: {{ item.relevance_score }}"></span>
-        </div>
+        <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
         <div class="item-meta">
-            {{ item.source_name }}
-            {% if item.published %} · {{ item.published.strftime('%b %d') if item.published.strftime is defined else item.published }}{% endif %}
+            <span class="item-source">{{ item.source_name }}</span>
+            {% if item.published_str %}
+            <span class="item-date"> · {{ item.published_str }}</span>
+            {% endif %}
         </div>
-        {% if item.snippet and item.snippet != item.title %}
+        {% if item.snippet %}
         <div class="item-snippet">{{ item.snippet[:200] }}{% if item.snippet|length > 200 %}…{% endif %}</div>
         {% endif %}
         {% if item.leaders_matched %}
-        <div class="item-keywords">
-            {% for name in item.leaders_matched[:3] %}
-            <span class="leader-tag">👤 {{ name }}</span>
+        <div class="item-leaders">
+            {% for leader in item.leaders_matched %}
+            <span class="leader-badge">👤 {{ leader }}</span>
             {% endfor %}
         </div>
         {% endif %}
-        {% if item.keywords_matched %}
-        <div class="item-keywords">
-            {% for kw in item.keywords_matched[:4] %}
-            {% if kw not in (item.leaders_matched or []) %}
-            <span class="keyword-tag">{{ kw }}</span>
-            {% endif %}
+        <div class="tags">
+            {% for kw in item.trade_keywords_matched[:5] %}
+            <span class="tag">{{ kw }}</span>
             {% endfor %}
         </div>
-        {% endif %}
     </div>
     {% endfor %}
 </div>
-{% endfor %}
+{% endif %}
 
-{% if not sections %}
-<div class="empty-section">
-    No items matched the trade policy filter today. Either it's quiet or the sources need tuning.
+<!-- Legislation & Hearings -->
+{% if sections.legislation %}
+<div class="section">
+    <div class="section-header">🏛️ Legislation &amp; Hearings</div>
+    {% for item in sections.legislation %}
+    <div class="item">
+        <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+        <div class="item-meta">
+            <span class="item-source">{{ item.source_name }}</span>
+            {% if item.published_str %}
+            <span class="item-date"> · {{ item.published_str }}</span>
+            {% endif %}
+        </div>
+        {% if item.snippet %}
+        <div class="item-snippet">{{ item.snippet[:200] }}{% if item.snippet|length > 200 %}…{% endif %}</div>
+        {% endif %}
+        {% if item.leaders_matched %}
+        <div class="item-leaders">
+            {% for leader in item.leaders_matched %}
+            <span class="leader-badge">👤 {{ leader }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="tags">
+            {% for kw in item.trade_keywords_matched[:5] %}
+            <span class="tag">{{ kw }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endif %}
 
-<div class="footer">
-    <div class="disclaimer">
-        <strong>⚠️ This is not journalism.</strong> Automated keyword + name filtering across public sources.
-        Tracking 100+ thought leaders. All items link to primary sources. Verify before acting.
+<!-- Industry Impact -->
+{% if sections.industry_impact %}
+<div class="section">
+    <div class="section-header">🏭 Industry Impact</div>
+    {% for item in sections.industry_impact %}
+    <div class="item">
+        <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+        <div class="item-meta">
+            <span class="item-source">{{ item.source_name }}</span>
+            {% if item.published_str %}
+            <span class="item-date"> · {{ item.published_str }}</span>
+            {% endif %}
+        </div>
+        {% if item.snippet %}
+        <div class="item-snippet">{{ item.snippet[:200] }}{% if item.snippet|length > 200 %}…{% endif %}</div>
+        {% endif %}
+        {% if item.leaders_matched %}
+        <div class="item-leaders">
+            {% for leader in item.leaders_matched %}
+            <span class="leader-badge">👤 {{ leader }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="tags">
+            {% for kw in item.trade_keywords_matched[:5] %}
+            <span class="tag">{{ kw }}</span>
+            {% endfor %}
+        </div>
     </div>
-    <p>
-        Generated {{ generated_at }} ·
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Analysis & Commentary -->
+{% if sections.analysis %}
+<div class="section">
+    <div class="section-header">📊 Analysis &amp; Commentary</div>
+    {% for item in sections.analysis %}
+    <div class="item">
+        <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+        <div class="item-meta">
+            <span class="item-source">{{ item.source_name }}</span>
+            {% if item.published_str %}
+            <span class="item-date"> · {{ item.published_str }}</span>
+            {% endif %}
+        </div>
+        {% if item.snippet %}
+        <div class="item-snippet">{{ item.snippet[:200] }}{% if item.snippet|length > 200 %}…{% endif %}</div>
+        {% endif %}
+        {% if item.leaders_matched %}
+        <div class="item-leaders">
+            {% for leader in item.leaders_matched %}
+            <span class="leader-badge">👤 {{ leader }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="tags">
+            {% for kw in item.trade_keywords_matched[:5] %}
+            <span class="tag">{{ kw }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Thought Leader Watch -->
+{% if sections.thought_leaders %}
+<div class="section">
+    <div class="section-header">🎙️ Thought Leader Watch</div>
+    {% for item in sections.thought_leaders %}
+    <div class="item">
+        <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+        <div class="item-meta">
+            <span class="item-source">{{ item.source_name }}</span>
+            {% if item.published_str %}
+            <span class="item-date"> · {{ item.published_str }}</span>
+            {% endif %}
+        </div>
+        {% if item.snippet %}
+        <div class="item-snippet">{{ item.snippet[:200] }}{% if item.snippet|length > 200 %}…{% endif %}</div>
+        {% endif %}
+        {% if item.leaders_matched %}
+        <div class="item-leaders">
+            {% for leader in item.leaders_matched %}
+            <span class="leader-badge">👤 {{ leader }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="tags">
+            {% for kw in item.trade_keywords_matched[:5] %}
+            <span class="tag">{{ kw }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<footer>
+    <p><strong>⚠️ This is not journalism.</strong> Automated keyword + name co-occurrence filtering across public sources.
+    Tracking {{ leader_count }} thought leaders. All items link to primary sources. Verify before acting.</p>
+    <p style="margin-top: 0.5rem;">
+        Generated {{ date }} ·
         No AI was used — just fetch, filter, and publish ·
         <a href="archive/">Browse archive</a>
     </p>
-</div>
+</footer>
 
 </body>
 </html>
