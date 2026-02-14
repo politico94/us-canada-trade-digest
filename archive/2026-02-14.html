@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US-Canada Trade Policy Digest — 2026-02-14</title>
+    <style>
+        :root {
+            --blue: #002868;
+            --accent: #C8102E;
+            --bg: #FAFAF8;
+            --text: #1a1a1a;
+            --muted: #666;
+            --border: #e0e0e0;
+            --card-bg: #ffffff;
+            --leader-bg: #F0F4FF;
+            --leader-border: #B8C9E8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        .header {
+            border-bottom: 4px double var(--accent);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--blue);
+        }
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-top: 0.3rem;
+        }
+        .version-badge {
+            display: inline-block;
+            background: var(--blue);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-family: -apple-system, sans-serif;
+            vertical-align: middle;
+            margin-left: 0.4rem;
+        }
+        .joke {
+            background: #FFF8F0;
+            border-left: 3px solid var(--accent);
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* --- Leaders-mentioned banner --- */
+        .leaders-banner {
+            background: var(--leader-bg);
+            border: 1px solid var(--leader-border);
+            border-radius: 6px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 2rem;
+            font-family: -apple-system, sans-serif;
+        }
+        .leaders-banner-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .leader-pill {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid var(--leader-border);
+            color: var(--blue);
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            margin: 0.15rem 0.2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        /* Thought Leader section gets a distinct accent */
+        .section-thought_leaders .section-title {
+            border-bottom-color: var(--blue);
+        }
+        .item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.6rem;
+        }
+        /* Thought leader items get a subtle left border */
+        .section-thought_leaders .item {
+            border-left: 3px solid var(--blue);
+        }
+        .item-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+        .item-title a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+        .item-title a:hover { text-decoration: underline; }
+        .item-meta {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 0.3rem;
+            font-family: -apple-system, sans-serif;
+        }
+        .item-snippet {
+            font-size: 0.88rem;
+            color: #444;
+            line-height: 1.5;
+        }
+        .item-keywords {
+            margin-top: 0.4rem;
+            font-size: 0.75rem;
+        }
+        .keyword-tag {
+            display: inline-block;
+            background: #EEF0F4;
+            color: var(--blue);
+            padding: 0.1rem 0.45rem;
+            border-radius: 3px;
+            margin-right: 0.25rem;
+            margin-top: 0.15rem;
+            font-family: -apple-system, sans-serif;
+        }
+        .leader-tag {
+            display: inline-block;
+            background: var(--leader-bg);
+            color: var(--blue);
+            padding: 0.1rem 0.45rem;
+            border-radius: 3px;
+            margin-right: 0.25rem;
+            margin-top: 0.15rem;
+            font-family: -apple-system, sans-serif;
+            font-weight: 600;
+        }
+        .score-bar {
+            display: inline-block;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        .empty-section {
+            color: var(--muted);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .footer {
+            border-top: 4px double var(--accent);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-family: -apple-system, sans-serif;
+        }
+        .footer a { color: var(--blue); }
+        .disclaimer {
+            background: #FFF3F3;
+            border: 1px solid #FFCCCC;
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .header h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🇺🇸🇨🇦 US-Canada Trade Policy Digest <span class="version-badge">v2</span></h1>
+    <div class="subtitle">2026-02-14 · 15 items from 6 sources · 6 thought leaders mentioned</div>
+</div>
+
+<div class="joke">
+    🍁 <strong>Today's Trade Quip:</strong> Mark Wiseman arrives as ambassador tomorrow. The trade lobby's Valentine's Day gift: another person to brief.
+</div>
+
+
+<div class="leaders-banner">
+    <div class="leaders-banner-title">🎙️ Voices in Today's Digest</div>
+    
+    <span class="leader-pill">Christopher Sands</span>
+    
+    <span class="leader-pill">Chrystia Freeland</span>
+    
+    <span class="leader-pill">Danielle Goldfarb</span>
+    
+    <span class="leader-pill">Dominic LeBlanc</span>
+    
+    <span class="leader-pill">Mark Carney</span>
+    
+    <span class="leader-pill">Scott Moe</span>
+    
+</div>
+
+
+
+<div class="section section-trade_actions">
+    <div class="section-title">⚖️ Trade Actions & Regulations</div>
+
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.csis.org/programs/scholl-chair-international-business" target="_blank" rel="noopener">The Trade GuysThe Greenland Trade War That Almost Was, China-Canada Détente, and Pharma DealsBill and Scott discuss President Trump's tariff threats surrounding Greenland, the outcomes of the World Ec</a>
+            <span class="score-bar" style="width: 26px;" title="Relevance: 6.5"></span>
+        </div>
+        <div class="item-meta">
+            CSIS Scholl Chair - Trade
+            
+        </div>
+        
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">tariff</span>
+            
+            
+            
+            <span class="keyword-tag">trade</span>
+            
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="section section-legislation">
+    <div class="section-title">🏛️ Legislation & Hearings</div>
+
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.bnnbloomberg.ca/business/politics/2026/02/14/us-senators-express-support-for-trade-pact-as-trump-questions-cusmas-future/" target="_blank" rel="noopener">U.S. senators express support for trade pact as Trump questions CUSMA’s future</a>
+            <span class="score-bar" style="width: 38px;" title="Relevance: 9.5"></span>
+        </div>
+        <div class="item-meta">
+            BNN Bloomberg Canada
+             · Feb 14
+        </div>
+        
+        <div class="item-snippet">United States lawmakers expressed support for the Canada-U.S.-Mexico Agreement on trade during a Thursday committee hearing after President Donald Trump floated the idea of ending the critical contine…</div>
+        
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">CUSMA</span>
+            
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">NATO</span>
+            
+            
+            
+            <span class="keyword-tag">trade</span>
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.csis.org/programs/scholl-chair-international-business" target="_blank" rel="noopener">The Trade GuysCanada Tariff Threats, Davos Roundup, and WTO Reform ProposalsBill and Scott react to President Trump's threat to impose 100 percent tariffs on Canada, plus discuss takeaways from the Wo</a>
+            <span class="score-bar" style="width: 26px;" title="Relevance: 6.5"></span>
+        </div>
+        <div class="item-meta">
+            CSIS Scholl Chair - Trade
+            
+        </div>
+        
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">tariff</span>
+            
+            
+            
+            <span class="keyword-tag">trade</span>
+            
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="section section-industry_impact">
+    <div class="section-title">🏭 Industry Impact</div>
+
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.theglobeandmail.com/business/" target="_blank" rel="noopener">Dominic LeBlanc to lead giant Canadian trade delegation to MexicoFuture of continental trade uncertain as USMCA set for review this yearAdam RadwanskiandMark Rendell8 min read</a>
+            <span class="score-bar" style="width: 44px;" title="Relevance: 11.0"></span>
+        </div>
+        <div class="item-meta">
+            Globe and Mail - Business
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Dominic LeBlanc</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">USMCA</span>
+            
+            
+            
+            <span class="keyword-tag">canadian</span>
+            
+            
+            
+            <span class="keyword-tag">LeBlanc</span>
+            
+            
+            
+            <span class="keyword-tag">trade</span>
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.bnnbloomberg.ca/tariffs/2026/02/13/dominic-leblanc-to-lead-large-trade-mission-to-mexico-next-week/" target="_blank" rel="noopener">Dominic LeBlanc to lead large trade mission to Mexico next week</a>
+            <span class="score-bar" style="width: 40px;" title="Relevance: 10.0"></span>
+        </div>
+        <div class="item-meta">
+            BNN Bloomberg Canada
+             · Feb 14
+        </div>
+        
+        <div class="item-snippet">The minister in charge of Canada-U.S. trade is leading a large delegation to Mexico next week as Ottawa looks to diversify its trade links in response to Donald Trump’s tariffs and threats.</div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Dominic LeBlanc</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">Ottawa</span>
+            
+            
+            
+            <span class="keyword-tag">tariff</span>
+            
+            
+            
+            <span class="keyword-tag">LeBlanc</span>
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.cbc.ca/news/canada/british-columbia/tumbler-ridge-mass-shooting-vigil-9.7089792?cmp=rss" target="_blank" rel="noopener">'Canadians are with you. We will always be with you': PM addresses vigil for Tumbler Ridge shooting victims</a>
+            <span class="score-bar" style="width: 20px;" title="Relevance: 5.0"></span>
+        </div>
+        <div class="item-meta">
+            CBC News - Politics
+             · Feb 14
+        </div>
+        
+        <div class="item-snippet">Prime Minister Mark Carney led federal, provincial and local leaders in offering support and praising the resilience and grace of Tumbler Ridge residents at a vigil in memory of the victims of Tuesday…</div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Mark Carney</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canadian</span>
+            
+            
+            
+            <span class="keyword-tag">Carney</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.cbc.ca/news/politics/chrystia-freeland-election-rules-violation-9.7089204?cmp=rss" target="_blank" rel="noopener">Former minister Freeland violated election rules during 2024 byelection, watchdog finds</a>
+            <span class="score-bar" style="width: 20px;" title="Relevance: 5.0"></span>
+        </div>
+        <div class="item-meta">
+            CBC News - Politics
+             · Feb 13
+        </div>
+        
+        <div class="item-snippet">Former deputy prime minister and cabinet minister Chrystia Freeland violated election rules during a 2024 byelection, the Commissioner of Canada Elections said on Friday.</div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Chrystia Freeland</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">Freeland</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.bnnbloomberg.ca/business/2026/02/14/canadas-economy-heavily-reliant-on-us-experts-warn-dependence-comes-with-risks/" target="_blank" rel="noopener">Canada’s economy heavily reliant on U.S., experts warn dependence comes with risks</a>
+            <span class="score-bar" style="width: 20px;" title="Relevance: 5.0"></span>
+        </div>
+        <div class="item-meta">
+            BNN Bloomberg Canada
+             · Feb 14
+        </div>
+        
+        <div class="item-snippet">Canada’s economy is deeply connected to the United States, making it vulnerable to shifts in American policy and trade decisions that can affect exports, supply chains, investment flows and tourism, e…</div>
+        
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">export</span>
+            
+            
+            
+            <span class="keyword-tag">trade</span>
+            
+            
+            
+            <span class="keyword-tag">united states</span>
+            
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="section section-analysis">
+    <div class="section-title">📊 Analysis & Commentary</div>
+
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.wilsoncenter.org/program/canada-institute" target="_blank" rel="noopener">Democratic TransitionMark Carney to Lead Canada Amid Rising Trade Tensions With USDuration:2:13Posted date/time:March 11, 2025</a>
+            <span class="score-bar" style="width: 26px;" title="Relevance: 6.5"></span>
+        </div>
+        <div class="item-meta">
+            Canada Institute (Wilson Center)
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Mark Carney</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">Carney</span>
+            
+            
+            
+            <span class="keyword-tag">trade</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://macdonaldlaurier.ca/canada-needs-to-grow-up-as-a-country-joe-varner-in-the-western-standard/" target="_blank" rel="noopener">Canada needs to grow up as a country: Joe Varner in the Western Standard</a>
+            <span class="score-bar" style="width: 20px;" title="Relevance: 5.0"></span>
+        </div>
+        <div class="item-meta">
+            Macdonald-Laurier Institute
+             · Feb 13
+        </div>
+        
+        <div class="item-snippet">This article originally appeared in the Western Standard. By Joe Varner, February 13, 2026 Canada’s foreign policy under Prime Minister Mark Carney is being sold as pragmatic, sophisticated, and globa…</div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Mark Carney</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">Carney</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.wilsoncenter.org/program/canada-institute" target="_blank" rel="noopener">DemocracyMark Carney's First Week: Xavier Delgado on CBCPosted date/time:March 20, 2025ByXavier Delgado</a>
+            <span class="score-bar" style="width: 16px;" title="Relevance: 4.0"></span>
+        </div>
+        <div class="item-meta">
+            Canada Institute (Wilson Center)
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Mark Carney</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">Carney</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.wilsoncenter.org/program/canada-institute" target="_blank" rel="noopener">The Canusa Street PodcastWelcome to Canusa Street: a podcast at the intersection of Canada-US relations. Join hosts Christopher Sands of the Wilson Center Canada Institute and Beth Burke of the Canadi</a>
+            <span class="score-bar" style="width: 12px;" title="Relevance: 3.0"></span>
+        </div>
+        <div class="item-meta">
+            Canada Institute (Wilson Center)
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Christopher Sands</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.wilsoncenter.org/program/canada-institute" target="_blank" rel="noopener">Snapshots from the Canada InstituteTake a look at some highlights from our panels, briefings, and other programming.PreviousNextPreviousNext1of16Saskatchewan Premier Scott Moe participates in a roundt</a>
+            <span class="score-bar" style="width: 12px;" title="Relevance: 3.0"></span>
+        </div>
+        <div class="item-meta">
+            Canada Institute (Wilson Center)
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Scott Moe</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="section section-thought_leaders">
+    <div class="section-title">🎙️ Thought Leader Watch</div>
+
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.wilsoncenter.org/program/canada-institute" target="_blank" rel="noopener">Featured ExpertsChristopher SandsTrump Tariff Threats: To What End?Xavier DelgadoMake Defense Spending About CanadiansDanielle GoldfarbCanada Institute Experts React to the US ElectionRichard SandersT</a>
+            <span class="score-bar" style="width: 34px;" title="Relevance: 8.5"></span>
+        </div>
+        <div class="item-meta">
+            Canada Institute (Wilson Center)
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Danielle Goldfarb</span>
+            
+            <span class="leader-tag">👤 Christopher Sands</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">canadian</span>
+            
+            
+            
+            <span class="keyword-tag">tariff</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+    <div class="item">
+        <div class="item-title">
+            <a href="https://www.wilsoncenter.org/program/canada-institute" target="_blank" rel="noopener">Recent Insights & AnalysisLearn MoreLearn MoreDemocracyCanada's 2025 Election: A Referendum on US-Canadian RelationsPosted date/time:March 25, 2025ByChristopher SandsDemocracyMark Carney's First Week:</a>
+            <span class="score-bar" style="width: 32px;" title="Relevance: 8.0"></span>
+        </div>
+        <div class="item-meta">
+            Canada Institute (Wilson Center)
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            <span class="leader-tag">👤 Mark Carney</span>
+            
+            <span class="leader-tag">👤 Christopher Sands</span>
+            
+        </div>
+        
+        
+        <div class="item-keywords">
+            
+            
+            <span class="keyword-tag">canada</span>
+            
+            
+            
+            <span class="keyword-tag">canadian</span>
+            
+            
+            
+            <span class="keyword-tag">Carney</span>
+            
+            
+            
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+
+
+<div class="footer">
+    <div class="disclaimer">
+        <strong>⚠️ This is not journalism.</strong> Automated keyword + name filtering across public sources.
+        Tracking 100+ thought leaders. All items link to primary sources. Verify before acting.
+    </div>
+    <p>
+        Generated 2026-02-14 22:12 UTC ·
+        No AI was used — just fetch, filter, and publish ·
+        <a href="archive/">Browse archive</a>
+    </p>
+</div>
+
+</body>
+</html>
