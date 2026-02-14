@@ -1,0 +1,305 @@
+{
+  "date": "2026-02-14",
+  "sections": {
+    "trade_actions": [
+      {
+        "title": "/Gouvernement du Canada",
+        "url": "https://www.canada.ca/en.html",
+        "source_name": "Canada Gazette",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "/Gouvernement du Canada",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "df3deffe0288d84459f43e30383bb587"
+      },
+      {
+        "title": "Canada and the world",
+        "url": "https://international.gc.ca/world-monde/index.aspx?lang=eng",
+        "source_name": "Canada Gazette",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Canada and the world",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "c32f9b9ffec798299a60b6d5756509cb"
+      },
+      {
+        "title": "Canada Gazette",
+        "url": "https://canadagazette.gc.ca/accueil-home-eng.html",
+        "source_name": "Canada Gazette",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "Canada Gazette",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "3740360917296b1f0ba9cff0c362f756"
+      },
+      {
+        "title": "The  Canada Gazette (1841 to 1997)",
+        "url": "https://recherche-collection-search.bac-lac.gc.ca/eng/help/cangaz",
+        "source_name": "Canada Gazette",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "The  Canada Gazette (1841 to 1997)",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "2464d49ee825e522f783997da0ae6d87"
+      },
+      {
+        "title": "2026: Canada Gazette, Part\u00a0I: Volume 160",
+        "url": "https://canadagazette.gc.ca/rp-pr/p1/2026/index-eng.html",
+        "source_name": "Canada Gazette",
+        "source_category": "canadian_government",
+        "published": null,
+        "snippet": "2026: Canada Gazette, Part\u00a0I: Volume 160",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "trade_actions",
+        "item_hash": "0650b8a6ca31ff031bfe20bdc6442166"
+      }
+    ],
+    "legislation": [
+      {
+        "title": "The U.S.-Mexico-Canada Agreement: Evaluating North American Competitiveness",
+        "url": "https://www.finance.senate.gov/hearings/the-us-mexico-canada-agreement-evaluating-north-american-competitiveness",
+        "source_name": "Senate Finance Committee",
+        "source_category": "congressional",
+        "published": null,
+        "snippet": "The U.S.-Mexico-Canada Agreement: Evaluating North American Competitiveness",
+        "relevance_score": 2.5,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "c84e61335e66ed61a4340de6b0a0ae90"
+      },
+      {
+        "title": "Trade Subcommittee Hearing on Maintaining American Innovation and Technology Leadership",
+        "url": "https://waysandmeans.house.gov/event/trade-subcommittee-hearing-on-maintaining-american-innovation-and-technology-leadership/",
+        "source_name": "House Ways and Means Committee",
+        "source_category": "congressional",
+        "published": null,
+        "snippet": "Trade Subcommittee Hearing on Maintaining American Innovation and Technology Leadership",
+        "relevance_score": 1.5,
+        "keywords_matched": [
+          "trade"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "0ea70bb999972d5356183df10267d8ae"
+      },
+      {
+        "title": "Opens in a new windowParliament of Canada",
+        "url": "https://parl.ca",
+        "source_name": "Senate of Canada - Debates",
+        "source_category": "parliamentary",
+        "published": null,
+        "snippet": "Opens in a new windowParliament of Canada",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "canada"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "04dc0029fa5f5d9b693af717919c56b0"
+      },
+      {
+        "title": "Go to Senators",
+        "url": "https://sencanada.ca/en/senators/",
+        "source_name": "Senate of Canada - Debates",
+        "source_category": "parliamentary",
+        "published": null,
+        "snippet": "Go to Senators",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "NATO"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "1d6e23c0d6f188f4b7ebbf40caa8ea83"
+      },
+      {
+        "title": "List of Senators",
+        "url": "https://sencanada.ca/en/senators/?v=tiles",
+        "source_name": "Senate of Canada - Debates",
+        "source_category": "parliamentary",
+        "published": null,
+        "snippet": "List of Senators",
+        "relevance_score": 1.0,
+        "keywords_matched": [
+          "NATO"
+        ],
+        "digest_section": "legislation",
+        "item_hash": "7dce55b023eb89649f95f720159881f0"
+      }
+    ],
+    "industry_impact": [
+      {
+        "title": "Dominic LeBlanc to lead giant Canadian trade delegation to MexicoFuture of continental trade uncertain as USMCA set for review this yearAdam RadwanskiandMark Rendell8 min read",
+        "url": "https://www.theglobeandmail.com/business/",
+        "source_name": "Globe and Mail - Business",
+        "source_category": "media",
+        "published": null,
+        "snippet": "Dominic LeBlanc to lead giant Canadian trade delegation to MexicoFuture of continental trade uncertain as USMCA set for review this yearAdam RadwanskiandMark Rendell8 min read",
+        "relevance_score": 7.0,
+        "keywords_matched": [
+          "USMCA",
+          "canadian",
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "8bdaa721940b967c6c0909ac00fc5701"
+      },
+      {
+        "title": "Export and Trade",
+        "url": "https://cme-mec.ca/initiatives/exports-trade/",
+        "source_name": "Canadian Manufacturers & Exporters",
+        "source_category": "industry",
+        "published": null,
+        "snippet": "Export and Trade",
+        "relevance_score": 4.0,
+        "keywords_matched": [
+          "export",
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "e24b32c15c2b2f166372053f62bb9806"
+      },
+      {
+        "title": "Trade & Tariffs Information Hub",
+        "url": "https://cme-mec.ca/manufacturer-information-hub-trade-tariffs/",
+        "source_name": "Canadian Manufacturers & Exporters",
+        "source_category": "industry",
+        "published": null,
+        "snippet": "Trade & Tariffs Information Hub",
+        "relevance_score": 4.0,
+        "keywords_matched": [
+          "tariff",
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "53969dd7351d63b9b28324fc1af7b5a8"
+      },
+      {
+        "title": "Rubio Reassures Europe Even as He Warns of \u2018Dangerous Delusion\u2019",
+        "url": "https://financialpost.com/pmn/business-pmn/rubio-reassures-europe-even-as-he-warns-of-dangerous-delusion",
+        "source_name": "Financial Post",
+        "source_category": "media",
+        "published": "2026-02-14 09:08:39+00:00",
+        "snippet": "Secretary of State Marco Rubio sought to reassure Europe of the US commitment to the continent even as he criticized western leaders for what he called a \u201cdangerous delusion\u201d of open borders, free trade and punishing energy policies.",
+        "relevance_score": 1.5,
+        "keywords_matched": [
+          "trade"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "7fe9fa22de2349a0a7b5ee3a0ec2b333"
+      },
+      {
+        "title": "Bunker Hill Announces Amendment to $30 Million LIFE Offering of Units & Warrant Exercise",
+        "url": "https://financialpost.com/globe-newswire/bunker-hill-announces-amendment-to-30-million-life-offering-of-units-warrant-exercise",
+        "source_name": "Financial Post",
+        "source_category": "media",
+        "published": "2026-02-14 01:20:15+00:00",
+        "snippet": "NOT FOR DISTRIBUTION TO UNITED STATES NEWS WIRE SERVICES OR FOR DISSEMINATION IN THE UNITED STATES. KELLOGG, Idaho and VANCOUVER, British Columbia, Feb. 13, 2026 (GLOBE NEWSWIRE) \u2014 Bunker Hill Mining Corp. (\u201cBunker Hill\u201d or the \u201cCompany\u201d) (TSX-V: BNKR | OTCQB: BHLL), wishes to announce, further to the Company\u2019s news release dated February 9, 2026, [\u2026]",
+        "relevance_score": 1.5,
+        "keywords_matched": [
+          "united states"
+        ],
+        "digest_section": "industry_impact",
+        "item_hash": "199064a2b7b14aa7c2a21def58447f7b"
+      }
+    ],
+    "analysis": [
+      {
+        "title": "Featured ExpertsChristopher SandsTrump Tariff Threats: To What End?Xavier DelgadoMake Defense Spending About CanadiansDanielle GoldfarbCanada Institute Experts React to the US ElectionRichard SandersT",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Featured ExpertsChristopher SandsTrump Tariff Threats: To What End?Xavier DelgadoMake Defense Spending About CanadiansDanielle GoldfarbCanada Institute Experts React to the US ElectionRichard SandersT",
+        "relevance_score": 4.5,
+        "keywords_matched": [
+          "canada",
+          "canadian",
+          "tariff"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "ff0db267d29f55c1acbe45891248218e"
+      },
+      {
+        "title": "Democratic TransitionMark Carney to Lead Canada Amid Rising Trade Tensions With USDuration:2:13Posted date/time:March 11, 2025",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Democratic TransitionMark Carney to Lead Canada Amid Rising Trade Tensions With USDuration:2:13Posted date/time:March 11, 2025",
+        "relevance_score": 3.5,
+        "keywords_matched": [
+          "canada",
+          "Carney",
+          "trade"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "a9b6d6b79c64cc92f96c40f17efed552"
+      },
+      {
+        "title": "Recent Insights & AnalysisLearn MoreLearn MoreDemocracyCanada's 2025 Election: A Referendum on US-Canadian RelationsPosted date/time:March 25, 2025ByChristopher SandsDemocracyMark Carney's First Week:",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Recent Insights & AnalysisLearn MoreLearn MoreDemocracyCanada's 2025 Election: A Referendum on US-Canadian RelationsPosted date/time:March 25, 2025ByChristopher SandsDemocracyMark Carney's First Week:",
+        "relevance_score": 3.0,
+        "keywords_matched": [
+          "canada",
+          "canadian",
+          "Carney"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "ba4ed1c475db7e09160b4609c9286a62"
+      },
+      {
+        "title": "How to Fix Math Education in Canada",
+        "url": "https://cdhowe.org/publication/how-to-fix-math-education-in-canada/",
+        "source_name": "C.D. Howe Institute",
+        "source_category": "think_tanks",
+        "published": "2026-02-13 11:00:59+00:00",
+        "snippet": "To: Education observers From: Anna StokkeRe: How to Fix Math Education in Canada \u00a0 Strong math skills are essential for careers that drive the Canadian economy, and early success in math has been shown to predict later academic success and financial earnings. Yet for more than a decade Canadian math scores in both the Program [\u2026]\nThe post How to Fix Math Education in Canada appeared first on C.D. Howe Institute.",
+        "relevance_score": 2.0,
+        "keywords_matched": [
+          "canada",
+          "canadian"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "e6879eed679ed82909ffd27447aa68da"
+      },
+      {
+        "title": "Global Alliances & PartnershipsBetween Two Hills: Canada-US Perspectives in Ottawa and WashingtonMarch 5, 2025",
+        "url": "https://www.wilsoncenter.org/program/canada-institute",
+        "source_name": "Canada Institute (Wilson Center)",
+        "source_category": "think_tanks",
+        "published": null,
+        "snippet": "Global Alliances & PartnershipsBetween Two Hills: Canada-US Perspectives in Ottawa and WashingtonMarch 5, 2025",
+        "relevance_score": 2.0,
+        "keywords_matched": [
+          "canada",
+          "Ottawa"
+        ],
+        "digest_section": "analysis",
+        "item_hash": "c9b2dc4f92c3b7165422fc1d8bb39ead"
+      }
+    ]
+  }
+}
