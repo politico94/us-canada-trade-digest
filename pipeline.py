@@ -56,7 +56,7 @@ CONFIG = {
         "analysis",
         "disputes",
     ],
-    "email_recipients": [wasif.anil@gmail.com],
+    "email_recipients": [],
     "archive_dir": "archive",
     "output_dir": "output",
 }
